@@ -6,7 +6,8 @@ INCLUDE = include
 LIBFT = libft
 FlAGS = -Wall -Wextra -Werror
 SRCS = corewar.c
-SRCS2 = asm.c
+SRCS2 = asm.c\
+		error.c
 OBJS = $(SRCS:.c=.o)
 OBJS2 = $(SRCS2:.c=.o)
 
@@ -29,16 +30,15 @@ $(NAME2): $(OBJS2) $(LIBFT)/libft.a
 clean:
 	rm -f $(OBJS)
 	rm -f $(OBJS2)
-	make -C $(LIBFT) clean
+	@make -C $(LIBFT) clean
 
 fclean: clean
 	rm -f $(NAME)
 	rm -f $(NAME2)
-	make -C $(LIBFT) fclean
+	@make -C $(LIBFT) fclean
 
 re: fclean all
 
 norme:
-	make -C $(LIBFT) norme
-	norminette $(OBJS)
-	norminette $(OBJS2)
+	@make -C $(LIBFT) norme
+	@norminette $(SRC) $(INCLUDE)
