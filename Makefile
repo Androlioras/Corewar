@@ -4,8 +4,11 @@ CC = gcc
 SRC = src
 INCLUDE = include
 LIBFT = libft
-FlAGS = -Wall -Wextra -Werror
-SRCS = corewar.c
+FLAGS = -Wall -Wextra -Werror
+SRCS = corewar.c\
+	   error.c\
+	   flags.c\
+	   champions.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)

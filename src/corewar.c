@@ -6,15 +6,17 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/15 14:30:33 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/16 14:33:17 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asm.h"
+#include "corewar.h"
 
 int		main(int argc, char **argv)
 {
-	argc++;
-	argv++;
+	t_arena	arena;
+
+	arena.flags.flags = 0;
+	get_flags(&arena, argc, argv);
 	return (0);
 }

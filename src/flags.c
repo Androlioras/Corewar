@@ -1,29 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_join.c                                      :+:      :+:    :+:   */
+/*   flags.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/15 14:06:03 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/15 14:57:21 by pribault         ###   ########.fr       */
+/*   Created: 2017/03/16 13:59:56 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/16 14:49:32 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_joinf.h"
+#include "corewar.h"
 
-void	print_string(va_list va, char *new, size_t *j)
+void	get_param(t_arena *arena, char *param)
 {
-	size_t	i;
-	char	*s;
-
-	i = 0;
-	s = va_arg(va, char*);
-	while (s[i])
-		new[(*j)++] = s[i++];
+	arena++;
+	param++;
 }
 
-size_t	get_string_len(va_list va)
+void	get_flags(t_arena *arena, int argc, char **argv)
 {
-	return (ft_strlen(va_arg(va, char*)));
+	int		i;
+	int		j;
+
+	i = 1;
+	j = 0;
+	while (i < argc)
+	{
+		if (argv[i][0] == '-')
+			get_param(arena, argv[i]);
+		else if (j < MAX_PLAYERS)
+			arena->champs[j++].name = argv[i];
+		else
+			ft_error(3, NULL);
+		i++;
+	}
+	create_champions(arena, j);
 }

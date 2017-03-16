@@ -54,7 +54,8 @@ fclean: clean
 norme:
 	@echo "\033[0m\033[44m\033[37m\033[1m[libft]\033[40m\033[1m making norme\033[32m"
 	@make -C $(LIBFT) norme
-	@norminette $(SRC) $(INCLUDES)
+	@make -C $(PRINTF) norme
+	@make -C $(JOINF) norme
 	@echo "\033[0m\033[44m\033[1m[libft]\033[40m\033[1m done\033[32m"
 
 re: fclean all

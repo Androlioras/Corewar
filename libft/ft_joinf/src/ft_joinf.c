@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_joinf.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/15 14:06:03 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/16 14:52:09 by pribault         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_joinf.h"
 
-size_t	get_next_arg(va_list va, const char *format, size_t *i)
+size_t		get_next_arg(va_list va, const char *format, size_t *i)
 {
 	if (format[*i] == 'd')
 		return (get_number_len(va));
@@ -9,7 +21,7 @@ size_t	get_next_arg(va_list va, const char *format, size_t *i)
 	return (0);
 }
 
-void	print_next_arg(va_list va, char *new, size_t *j, char c)
+void		print_next_arg(va_list va, char *new, size_t *j, char c)
 {
 	if (c == 'd')
 		print_number(va, new, j);
@@ -36,7 +48,7 @@ static void	fill_string(va_list va, const char *format, char *new)
 	}
 }
 
-int		ft_printj(const char *format, ...)
+int			ft_printj(const char *format, ...)
 {
 	char	*s;
 
@@ -45,7 +57,7 @@ int		ft_printj(const char *format, ...)
 	return (ft_strlen(s));
 }
 
-char	*ft_joinf(const char *format, ...)
+char		*ft_joinf(const char *format, ...)
 {
 	char	*new;
 	va_list	va;
@@ -66,6 +78,7 @@ char	*ft_joinf(const char *format, ...)
 		}
 	}
 	new = (char*)malloc(sizeof(char) * (len + i - 2 * n + 1));
+	ft_bzero(new, len + i - 2 * n + 1);
 	va_start(va, format);
 	fill_string(va, format, new);
 	va_end(va);

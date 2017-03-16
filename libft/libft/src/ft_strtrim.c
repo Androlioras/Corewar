@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/07 18:45:20 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/11 18:31:47 by ardanel          ###   ########.fr       */
+/*   Updated: 2017/03/15 15:01:22 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,7 @@ char	*ft_strtrim(char const *s)
 		return (NULL);
 	i[1] = 0;
 	while (i[1] <= j - n - i[0] && j != n)
-	{
-		result[i[1]] = s[n + i[1]];
-		i[1]++;
-	}
+		result[i[1]++] = s[n + i[1]];
 	result[i[1]] = '\0';
 	return (result);
 }
