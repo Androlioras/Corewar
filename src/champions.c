@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 14:39:19 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/16 16:08:23 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/16 17:13:45 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,5 @@ void	create_champions(t_arena *arena, int n)
 	i = 0;
 	while (i < n)
 		close(fd[i++]);
+	// creat_process(arena, n);
 }

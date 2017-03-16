@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/16 14:46:21 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/16 17:04:12 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct	s_champ
 	char		*name;
 	char		*comment;
 	size_t		len;
+	size_t		live;
 	t_list		*process;
 }				t_champ;
 
@@ -51,5 +52,7 @@ void	ft_error(int error, void *param);
 void	get_flags(t_arena *arena, int argc, char **argv);
 
 void	create_champions(t_arena *arena, int n);
+
+void	creat_process(t_arena *arena, int n);
 
 #endif
