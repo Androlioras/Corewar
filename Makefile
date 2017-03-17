@@ -8,7 +8,8 @@ FLAGS = -Wall -Wextra -Werror
 SRCS = corewar.c\
 	   error.c\
 	   flags.c\
-	   champions.c
+	   champions.c\
+	   process.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)
@@ -24,10 +25,10 @@ $(LIBFT)/libft.a:
 %.o: $(SRC)/%.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $@ -c $^
 
-$(NAME): $(OBJS) $(LIBFT)/libft.a
+$(NAME): $(LIBFT)/libft.a $(OBJS)
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $(NAME) $(OBJS) -L $(LIBFT) -lft
 
-$(NAME2): $(OBJS2) $(LIBFT)/libft.a
+$(NAME2): $(LIBFT)/libft.a $(OBJS2)
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $(NAME2) $(OBJS2) -L $(LIBFT) -lft
 
 clean:

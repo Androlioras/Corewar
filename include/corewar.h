@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/16 17:04:12 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 09:23:47 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,15 @@ typedef struct	s_arena
 	t_list		*waiting;
 }				t_arena;
 
-void	ft_error(int error, void *param);
+void			ft_error(int error, void *param);
 
-void	get_flags(t_arena *arena, int argc, char **argv);
+size_t			ft_endian(size_t n);
+void			ft_endian_c(char *n);
 
-void	create_champions(t_arena *arena, int n);
+void			get_flags(t_arena *arena, int argc, char **argv);
 
-void	creat_process(t_arena *arena, int n);
+void			create_champions(t_arena *arena, int n);
+
+void			creat_process(t_arena *arena, int n, int fd[4]);
 
 #endif
