@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 12:10:50 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 13:43:45 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ t_list	*new_process(t_arena *arena, t_process *father, char pc[4])
 {
 	t_list	*new;
 
+	arena++;
 	if (!(new = ft_lstnew(father, sizeof(t_process))))
 		return (NULL);
 	ft_memcpy(((t_process*)(new->content))->pc, pc, 4);
 	ft_endian_c(((t_process*)(new->content))->pc);
-	ft_lstadd(&(arena->active), new);
 	ft_printf("new process at: %u\n", ft_endian(*(size_t*)(((t_process*)(new->content))->pc)));
 	return (new);
 }
@@ -29,18 +29,11 @@ void	place_champion(t_arena *arena, int i, int fd, size_t pc)
 {
 	char	code[CHAMP_MAX_SIZE];
 	int		m;
-	int		j;
 
 	m = ft_endian(arena->champs[i].len);
 	if ((read(fd, code, m)) == -1)
 		return ;
-	j = 0;
-	while (j < m)
-	{
-		arena->arena[pc + j] = code[j];
-		j++;
-	}
-	// ft_memcpy(arena->arena + pc, code, ft_endian(arena->champs[i].len));
+	ft_memcpy(arena->arena + pc, code, ft_endian(arena->champs[i].len));
 }
 
 void	creat_process(t_arena *arena, int n, int fd[4])

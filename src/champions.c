@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 14:39:19 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 09:38:24 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 13:14:05 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ size_t	ft_endian(size_t n)
 	return (r);
 }
 
-void	ft_endian_c(char *n)
+void	ft_endian_c(t_char *n)
 {
-	char	r[4];
+	t_char	r[4];
 
 	ft_memcpy(r, n, 4);
 	n[0] = r[3];

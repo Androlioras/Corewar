@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 13:59:56 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/16 14:49:32 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 12:43:53 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ void	get_flags(t_arena *arena, int argc, char **argv)
 			ft_error(3, NULL);
 		i++;
 	}
+	arena->n = j;
 	create_champions(arena, j);
 }
