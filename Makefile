@@ -9,7 +9,8 @@ SRCS = corewar.c\
 	   error.c\
 	   flags.c\
 	   champions.c\
-	   process.c
+	   process.c\
+	   vm.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)

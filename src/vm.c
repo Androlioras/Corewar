@@ -1,27 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar.c                                          :+:      :+:    :+:   */
+/*   vm.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 12:06:14 by pribault         ###   ########.fr       */
+/*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/17 12:06:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-int		main(int argc, char **argv)
+void	print_map(t_arena *arena)
 {
-	t_arena	arena;
+	int		sqrt;
+	int		i;
+	int		j;
 
-	arena.flags.flags = 0;
-	arena.active = NULL;
-	arena.waiting = NULL;
-	arena.cycle = 0;
-	ft_bzero(&arena.arena, MEM_SIZE);
-	get_flags(&arena, argc, argv);
-	virtual_machine(&arena);
-	return (0);
+	sqrt = ft_sqrt(MEM_SIZE);
+	i = 0;
+	while (i <= sqrt)
+	{
+		j = 0;
+		while (j <= sqrt)
+		{
+			ft_printf("\033[48;5;%dm%.2hhx ", arena->arena[i * sqrt + j], arena->arena[i * sqrt + j]);
+			j++;
+		}
+		ft_printf("\033[48;5;0m\n");
+		i++;
+	}
+	ft_putchar('\n');
+}
+
+void	virtual_machine(t_arena *arena)
+{
+	while (1)
+	{
+		getchar();
+		print_map(arena);
+		arena->cycle++;
+	}
 }

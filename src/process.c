@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 10:12:19 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 12:10:50 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 
 	ft_bzero((void*)&(def.reg), REG_NUMBER * REG_SIZE);
 	ft_bzero((void*)&(def.pc), REG_SIZE);
+	def.waiting = 0;
 	def.carry = 0;
 	def.cycles = 0;
 	i = 0;
