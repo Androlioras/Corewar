@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 09:38:53 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 09:35:51 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/17 14:41:21 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ static void	ft_error_2(int error, void *param)
 		s = ft_joinf("%s is too faaaaaaaat", (char*)param);
 		ft_putendl_fd(s, 2);
 		free(s);
+	}
+	else if (error == 666)
+	{
+		ft_putendl_fd("internal error. wtf ?!?", 2);
 	}
 }
 
@@ -54,6 +58,6 @@ void		ft_error(int error, void *param)
 		ft_putendl_fd("Magiiiiiic :'(", 2);
 	else
 		ft_error_2(error, param);
-	if (error >= 1 && error <= 7)
+	if ((error >= 1 && error <= 7) || error == 666)
 		exit(1);
 }

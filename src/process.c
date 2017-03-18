@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 13:43:45 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 15:34:45 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 	e = (MEM_SIZE - l) / n;
 	while (i < n)
 	{
-		ft_printf("%d\n", ft_endian(arena->champs[i].len));
+		ft_memcpy(def.reg[0], &(arena->champs[i].id), REG_SIZE);
 		pc = (i == 0) ? 0 : pc + ft_endian(arena->champs[i - 1].len) + e;
 		place_champion(arena, i, fd[i], pc);
 		arena->champs[i].process = new_process(arena, &def, (char*)&pc);

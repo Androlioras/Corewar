@@ -1,40 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flags.c                                            :+:      :+:    :+:   */
+/*   window.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/16 13:59:56 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 14:47:07 by pribault         ###   ########.fr       */
+/*   Created: 2017/03/18 09:13:13 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/18 09:39:13 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-void	get_param(t_arena *arena, char *param)
+void	init_window(t_win *win, int *argc, char **argv)
 {
-	arena++;
-	param++;
-}
-
-void	get_flags(t_arena *arena, int argc, char **argv)
-{
-	int		i;
-	t_char	j;
-
-	i = 1;
-	j = 0;
-	while (i < argc)
-	{
-		if (argv[i][0] == '-')
-			get_param(arena, argv[i]);
-		else if (j < MAX_PLAYERS)
-			arena->champs[j++].name = argv[i];
-		else
-			ft_error(3, NULL);
-		i++;
-	}
-	arena->n = j;
-	create_champions(arena, j);
+	win->w = (win->w > WIN_W_SIZE) ? WIN_W_SIZE : win->w;
+	win->h = (win->h > WIN_H_SIZE) ? WIN_H_SIZE : win->h;
+	glutInit(argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowPosition((WIN_W_SIZE - win->w) / 2, 100);
+	glutInitWindowSize(win->w, win->h);
+	glutCreateWindow(win->name);
 }

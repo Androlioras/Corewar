@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 14:39:19 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/17 13:14:05 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 14:37:44 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	create_champions(t_arena *arena, int n)
 		arena->champs[i].name = header.prog_name;
 		arena->champs[i].comment = header.comment;
 		arena->champs[i].len = header.prog_size;
+		arena->champs[i].id = 0xffffffff - i;
 		if (ft_endian(arena->champs[i].len) > CHAMP_MAX_SIZE)
 			ft_error(7, arena->champs[i].name);
 		i++;
