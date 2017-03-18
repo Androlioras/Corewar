@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 15:55:20 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 22:04:51 by ardanel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,27 +105,23 @@ void	virtual_machine(t_arena *arena)
 	t_process	*process;
 	t_char		i;
 
-	while (1)
+	i = 0;
+	ft_printf("cycle: %u\n", arena->cycle);
+	while (i < arena->n)
 	{
-		i = 0;
-		print_map(arena);
-		getchar();
-		while (i < arena->n)
+		list = arena->champs[i++].process;
+		while (list)
 		{
-			list = arena->champs[i++].process;
-			while (list)
-			{
-				process = (t_process*)list->content;
-				ft_printf("pc=%x\n", get_pc(process->pc));
-				if (process->waiting)
-					ft_printf("process is waiting for %s\n", g_op[process->todo[0] - 1].name);
-				if (!process->waiting)
-					read_instruction(arena, process);
-				else if (process->cycles <= arena->cycle)
-					execute(arena, process);
-				list = list->next;
-			}
+			process = (t_process*)list->content;
+			// ft_printf("pc=%x\n", get_pc(process->pc));
+			if (!process->waiting)
+				read_instruction(arena, process);
+			if (process->cycles <= arena->cycle)
+				execute(arena, process);
+			if (process->waiting)
+				ft_printf("process is waiting for %s\n", g_op[process->todo[0] - 1].name);
+			list = list->next;
 		}
-		arena->cycle++;
 	}
+	arena->cycle++;
 }

@@ -3,54 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   corewar.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 16:41:05 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 22:50:43 by ardanel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+	
+t_arena	arena;
+t_win	win;
 
 void renderScene(void)
 {
-	char	*n;
-	int		i;
-	int		l;
-
-	n = ft_itoa(glutGet(GLUT_ELAPSED_TIME) / 1000);
-	glRasterPos2f(0, 0);
-	i = 0;
-	l = ft_strlen(n);
-	while (i < l)
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, n[i++]);
-	free(n);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBegin(GL_POLYGON);
-		glVertex3f(-0.5,-0.5,0.0);
-		glVertex3f(0.5,0.0,0.0);
-		glVertex3f(0.0,0.5,0.0);
-		glVertex3f(-0.5,0.5,0.0);
-	glEnd();
+    glEnd();
     glutSwapBuffers();
+}
+
+void	corewar(void)
+{
+	virtual_machine(&arena);
+}
+
+void    event_keys(t_char key, int x, int y)
+{
+    x++;
+    y++;
+    ft_printf("key %hhu pressed\n", key);
+    if (key == 27)
+        exit(0);
 }
 
 int		main(int argc, char **argv)
 {
-	t_arena	arena;
-	t_win	win;
 
 	arena.flags.flags = 0;
 	arena.cycle = 0;
 	win.name = "Corewar";
-	win.w = 1920;
-	win.h = 1080;
+	win.w = 640;
+	win.h = 480;
 	ft_bzero(&arena.arena, MEM_SIZE);
 	get_flags(&arena, argc, argv);
-	ft_printf("champion 1: %u\n", ((t_process*)arena.champs[0].process->content)->reg[0]);
 	init_window(&win, &argc, argv);
+	ft_printf("champion 1: %u\n", ((t_process*)arena.champs[0].process->content)->reg[0]);
 	glutDisplayFunc(renderScene);
+	glutIdleFunc(corewar);
+    glutKeyboardFunc(event_keys);
 	glutMainLoop();
-	virtual_machine(&arena);
 	return (0);
 }

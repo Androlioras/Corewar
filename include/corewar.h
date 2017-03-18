@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   corewar.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 14:45:54 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 18:03:44 by ardanel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 # include "ft_printf.h"
 # include "op.h"
-# import <GLUT/glut.h>
-# import <OpenGL/OpenGL.h>
+# include <stdio.h>
+# include <GL/glut.h>
+# include <GL/gl.h>
 
 # define ACTION_MAX_SIZE	8
-# define WIN_W_SIZE			2560
-# define WIN_H_SIZE			1440
+# define WIN_W_SIZE			1920
+# define WIN_H_SIZE			1080
 
 typedef unsigned char	t_char;
 

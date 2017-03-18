@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 16:15:31 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/18 22:04:02 by ardanel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,8 @@ void	do_add(t_arena *arena, t_process *process)
 	l = get_params(arena, &params, get_pc(process->pc), 3);
 	res = ft_endian(get_pc(process->reg[params[0] % REG_NUMBER]));
 	res += ft_endian(get_pc(process->reg[params[1] % REG_NUMBER]));
-	pc = ft_endian(get_pc(process->reg[params[2] % REG_NUMBER]));
 	ft_endian_c((t_char*)&res);
-	print_in_map(arena, pc, (t_char*)&res, REG_SIZE);
+	ft_memcpy(process->reg[params[2] % REG_NUMBER], &res, REG_SIZE);
 	process->carry = 0;
 	move_process(process, l);
 }
@@ -104,9 +103,16 @@ void	do_add(t_arena *arena, t_process *process)
 void	do_sub(t_arena *arena, t_process *process)
 {
 	size_t	params[MAX_ARGS_NUMBER];
+	size_t	res;
+	size_t	pc;
 	size_t	l;
 
-	l = get_params(arena, &params, get_pc(process->pc), 4);
+	l = get_params(arena, &params, get_pc(process->pc), 3);
+	res = ft_endian(get_pc(process->reg[params[0] % REG_NUMBER]));
+	res -= ft_endian(get_pc(process->reg[params[1] % REG_NUMBER]));
+	ft_endian_c((t_char*)&res);
+	ft_memcpy(process->reg[params[2] % REG_NUMBER], &res, REG_SIZE);
+	process->carry = 0;
 	move_process(process, l);
 }
 
