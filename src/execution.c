@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 22:04:02 by ardanel          ###   ########.fr       */
+/*   Updated: 2017/03/20 12:29:44 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ void	do_add(t_arena *arena, t_process *process)
 {
 	size_t	params[MAX_ARGS_NUMBER];
 	size_t	res;
-	size_t	pc;
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 3);
@@ -104,7 +103,6 @@ void	do_sub(t_arena *arena, t_process *process)
 {
 	size_t	params[MAX_ARGS_NUMBER];
 	size_t	res;
-	size_t	pc;
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 3);

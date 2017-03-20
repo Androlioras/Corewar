@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 22:04:51 by ardanel          ###   ########.fr       */
+/*   Updated: 2017/03/20 12:44:19 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ size_t	get_pc(t_char pc[REG_SIZE])
 	return (n);
 }
 
-void	move_process(t_process *process, size_t	n)
+void	move_process(t_process *process, size_t n)
 {
 	size_t	pc;
 
@@ -56,27 +56,27 @@ void	execute(t_arena *arena, t_process *process)
 	process->waiting = 0;
 }
 
-void	print_map(t_arena *arena)
-{
-	int		sqrt;
-	int		i;
-	int		j;
+// void	print_map(t_arena *arena)
+// {
+// 	int		sqrt;
+// 	int		i;
+// 	int		j;
 
-	sqrt = ft_sqrt(MEM_SIZE);
-	i = 0;
-	while (i <= sqrt)
-	{
-		j = 0;
-		while (j <= sqrt)
-		{
-			printf("\033[48;5;%dm%.2hhx ", arena->arena[i * sqrt + j], arena->arena[i * sqrt + j]);
-			j++;
-		}
-		printf("\033[48;5;0m\n");
-		i++;
-	}
-	ft_putchar('\n');
-}
+// 	sqrt = ft_sqrt(MEM_SIZE);
+// 	i = 0;
+// 	while (i <= sqrt)
+// 	{
+// 		j = 0;
+// 		while (j <= sqrt)
+// 		{
+// 			printf("\033[48;5;%dm%.2hhx ", arena->arena[i * sqrt + j], arena->arena[i * sqrt + j]);
+// 			j++;
+// 		}
+// 		printf("\033[48;5;0m\n");
+// 		i++;
+// 	}
+// 	ft_putchar('\n');
+// }
 
 void	read_instruction(t_arena *arena, t_process *process)
 {

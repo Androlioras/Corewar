@@ -4,8 +4,9 @@ CC = gcc
 SRC = src
 INCLUDE = include
 LIBFT = libft
-FLAGS = -Wall -Wextra -Werror -Wno-deprecated-declarations
-ENDFLAGS = -framework GLUT -framework OpenGL
+SDL = sdl2
+FLAGS = -Wall -Wextra -Werror
+ENDFLAGS = -framework Appkit -framework OpenGL
 SRCS = corewar.c\
 	   error.c\
 	   flags.c\
@@ -28,17 +29,17 @@ $(LIBFT)/libft.a:
 	make -C $(LIBFT)
 
 %.o: $(SRC)/%.c
-	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $@ -c $^
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(SDL)/include -o $@ -c $^
 
 $(INCLUDE)/corewar.h: $(OBJS)
 
 $(INCLUDE)/asm.h: $(OBJS2)
 
 $(NAME): $(LIBFT)/libft.a $(INCLUDE)/corewar.h $(OBJS)
-	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $(NAME) $(OBJS) -L $(LIBFT) -lft $(ENDFLAGS)
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(SDL)/include -o $(NAME) $(OBJS) -L $(LIBFT) -lft -L $(SDL) -lSDL2 -lSDL2main $(ENDFLAGS)
 
 $(NAME2): $(LIBFT)/libft.a $(INCLUDE)/asm.h $(OBJS2)
-	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -o $(NAME2) $(OBJS2) -L $(LIBFT) -lft
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(SDL)/include -I $(LIBFT) -o $(NAME2) $(OBJS2) -L $(LIBFT) -lft
 
 clean:
 	rm -f $(OBJS)
