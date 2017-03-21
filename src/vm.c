@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/20 12:44:19 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/21 14:02:12 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,34 @@ void	execute(t_arena *arena, t_process *process)
 	process->waiting = 0;
 }
 
-// void	print_map(t_arena *arena)
-// {
-// 	int		sqrt;
-// 	int		i;
-// 	int		j;
+void	print_map(t_arena *arena, t_win *win)
+{
+	t_char	color[MAX_PLAYERS + 1];
+	int		sqrt;
+	int		i;
+	int		j;
 
-// 	sqrt = ft_sqrt(MEM_SIZE);
-// 	i = 0;
-// 	while (i <= sqrt)
-// 	{
-// 		j = 0;
-// 		while (j <= sqrt)
-// 		{
-// 			printf("\033[48;5;%dm%.2hhx ", arena->arena[i * sqrt + j], arena->arena[i * sqrt + j]);
-// 			j++;
-// 		}
-// 		printf("\033[48;5;0m\n");
-// 		i++;
-// 	}
-// 	ft_putchar('\n');
-// }
+	win++;
+	sqrt = ft_sqrt(MEM_SIZE);
+	i = 0;
+	color[0] = 237;
+	color[1] = 124;
+	color[2] = 18;
+	color[3] = 28;
+	color[4] = 227;
+	while (i <= sqrt)
+	{
+		j = 0;
+		while (j <= sqrt)
+		{
+			printf("\033[48;5;%dm%.2hhx ", color[arena->territory[i * sqrt + j]], arena->arena[i * sqrt + j]);
+			j++;
+		}
+		printf("\033[48;5;0m\n");
+		i++;
+	}
+	ft_putchar('\n');
+}
 
 void	read_instruction(t_arena *arena, t_process *process)
 {
@@ -99,27 +106,58 @@ void	read_instruction(t_arena *arena, t_process *process)
 	}
 }
 
-void	virtual_machine(t_arena *arena)
+void	verif_lives(t_arena *arena, t_win *win)
+{
+	size_t	lives;
+	t_char	living;
+	t_char	i;
+
+	lives = 0;
+	living = 0;
+	i = 0;
+	while (i < arena->n)
+	{
+		if (arena->champs[i].process)
+			living++;
+		lives += arena->champs[i].live;
+		if (!arena->champs[i].live && arena->champs[i].process)
+			kill_champion(&arena->champs[i]);
+		else
+			arena->last = i;
+		arena->champs[i].live = 0;
+		i++;
+	}
+	if (lives >= NBR_LIVE)
+		arena->cycle_to_die -= CYCLE_DELTA;
+	if (!living)
+		win->stop = 1;
+	arena->to_die = arena->cycle_to_die;
+}
+
+void	virtual_machine(t_arena *arena, t_win *win)
 {
 	t_list		*list;
 	t_process	*process;
 	t_char		i;
 
 	i = 0;
-	ft_printf("cycle: %u\n", arena->cycle);
+	if (!arena->to_die)
+		verif_lives(arena, win);
+	else
+		arena->to_die--;
+	// printf("cycle:%lu | to die: %lu | cycle to die: %lu\n", arena->cycle, arena->to_die, arena->cycle_to_die);
 	while (i < arena->n)
 	{
 		list = arena->champs[i++].process;
 		while (list)
 		{
 			process = (t_process*)list->content;
-			// ft_printf("pc=%x\n", get_pc(process->pc));
 			if (!process->waiting)
 				read_instruction(arena, process);
 			if (process->cycles <= arena->cycle)
 				execute(arena, process);
-			if (process->waiting)
-				ft_printf("process is waiting for %s\n", g_op[process->todo[0] - 1].name);
+			// if (process->waiting)
+			// 	ft_printf("process is waiting for %s\n", g_op[process->todo[0] - 1].name);
 			list = list->next;
 		}
 	}

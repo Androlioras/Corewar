@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/20 12:42:39 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/21 14:10:55 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ typedef struct		s_process
 	char			carry;
 	size_t			cycles;
 	t_char			todo[ACTION_MAX_SIZE];
+	size_t			champ;
 }					t_process;
 
 typedef struct		s_champ
 {
-	char			*name;
-	char			*comment;
+	char			name[PROG_NAME_LENGTH + 1];
+	char			comment[COMMENT_LENGTH + 1];
 	size_t			len;
 	size_t			live;
 	size_t			id;
@@ -55,9 +56,13 @@ typedef struct		s_arena
 {
 	t_flags			flags;
 	t_char			arena[MEM_SIZE];
+	t_char			territory[MEM_SIZE];
 	t_champ			champs[MAX_PLAYERS];
 	t_char			n;
+	t_char			last;
 	size_t			cycle;
+	size_t			to_die;
+	size_t			cycle_to_die;
 }					t_arena;
 
 typedef struct		s_win
@@ -93,13 +98,18 @@ void				move_process(t_process *process, size_t	n);
 size_t				ft_endian(size_t n);
 void				ft_endian_c(t_char *n);
 
-void				virtual_machine(t_arena *arena);
+void				virtual_machine(t_arena *arena, t_win *win);
+void				print_map(t_arena *arena, t_win *win);
 
 void				get_flags(t_arena *arena, int argc, char **argv);
 
 void				create_champions(t_arena *arena, int n);
 
+void				kill_champion(t_champ *champ);
+
 void				creat_process(t_arena *arena, int n, int fd[MAX_PLAYERS]);
+t_list				*new_process(t_arena *arena, t_process *father, t_char pc[4]);
+void				free_process(t_arena *arena);
 
 void				call_function(t_arena *arena, t_process *process, t_char f);
 

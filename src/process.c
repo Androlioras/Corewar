@@ -6,13 +6,13 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/18 15:34:45 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/21 13:27:35 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-t_list	*new_process(t_arena *arena, t_process *father, char pc[4])
+t_list	*new_process(t_arena *arena, t_process *father, t_char pc[4])
 {
 	t_list	*new;
 
@@ -21,27 +21,54 @@ t_list	*new_process(t_arena *arena, t_process *father, char pc[4])
 		return (NULL);
 	ft_memcpy(((t_process*)(new->content))->pc, pc, 4);
 	ft_endian_c(((t_process*)(new->content))->pc);
-	ft_printf("new process at: %u\n", ft_endian(*(size_t*)(((t_process*)(new->content))->pc)));
+	// ft_printf("new process at: %u\n", ft_endian(*(size_t*)(((t_process*)(new->content))->pc)));
 	return (new);
+}
+
+void	free_process(t_arena *arena)
+{
+	t_list	*list;
+	t_list	*next;
+	t_char	i;
+
+	i = 0;
+	while (i < arena->n)
+	{
+		list = arena->champs[i++].process;
+		while (list)
+		{
+			next = list->next;
+			free(list->content);
+			free(list);
+			list = next;
+		}
+	}
 }
 
 void	place_champion(t_arena *arena, int i, int fd, size_t pc)
 {
 	char	code[CHAMP_MAX_SIZE];
 	int		m;
+	size_t	j;
 
 	m = ft_endian(arena->champs[i].len);
 	if ((read(fd, code, m)) == -1)
 		return ;
 	ft_memcpy(arena->arena + pc, code, ft_endian(arena->champs[i].len));
+	j = 0;
+	while (j < ft_endian(arena->champs[i].len))
+	{
+		(arena->territory + pc)[j] = i + 1;
+		j++;
+	}
 }
 
 void	creat_process(t_arena *arena, int n, int fd[4])
 {
 	t_process	def;
 	size_t		pc;
-	int			l;
 	int			i;
+	int			l;
 	int			e;
 
 	ft_bzero((void*)&(def.reg), REG_NUMBER * REG_SIZE);
@@ -57,10 +84,11 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 	e = (MEM_SIZE - l) / n;
 	while (i < n)
 	{
+		def.champ = (size_t)i;
 		ft_memcpy(def.reg[0], &(arena->champs[i].id), REG_SIZE);
 		pc = (i == 0) ? 0 : pc + ft_endian(arena->champs[i - 1].len) + e;
 		place_champion(arena, i, fd[i], pc);
-		arena->champs[i].process = new_process(arena, &def, (char*)&pc);
+		arena->champs[i].process = new_process(arena, &def, (t_char*)&pc);
 		i++;
 	}
 }

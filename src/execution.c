@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/20 12:29:44 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/21 17:27:13 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,40 +47,62 @@ size_t	get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER], size_t pc,
 	return (l);
 }
 
-void	print_in_map(t_arena *arena, size_t pc, t_char *n, t_char l)
+void	print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n, t_char l)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < l)
 	{
-		arena->arena[(pc + i) % MEM_SIZE] = n[i];
+		arena[(pc + i) % MEM_SIZE] = n[i];
 		i++;
 	}
 }
 
 void	do_live(t_arena *arena, t_process *process)
 {
-	arena++;
+	size_t	id;
+	t_char	i;
+
+	id = get_number(arena, get_pc(process->pc) + 1, 4);
+	i = 0;
+	while (i < arena->n)
+	{
+		if (arena->champs[i].id == id)
+		{
+			ft_printf("un processus dit que le joueur %d(%s) est en vie\n",
+			i + 1, arena->champs[i].name);
+			arena->champs[i].live++;
+		}
+		i++;
+	}
 	move_process(process, 5);
 }
 
-void	do_ld(t_arena *arena, t_process *process)
+void	do_ld(t_arena *arena, t_process *proc)
 {
-	size_t	params[MAX_ARGS_NUMBER];
+	size_t	p[MAX_ARGS_NUMBER];
+	size_t	mask;
 	size_t	l;
 
-	l = get_params(arena, &params, get_pc(process->pc), 1);
-	ft_printf("%u\n", l);
-	move_process(process, l);
+	l = get_params(arena, &p, get_pc(proc->pc), 1);
+	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
+	if (((mask & 0xc0) >> 6) == 3)
+		p[0] = get_number(arena, p[0], 4);
+	ft_memcpy(proc->reg[(p[1] - 1) % REG_NUMBER], &p, REG_SIZE);
+	move_process(proc, l);
+	proc->carry = 1;
 }
 
 void	do_st(t_arena *arena, t_process *process)
 {
 	size_t	params[MAX_ARGS_NUMBER];
+	size_t	mask;
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 2);
+	mask = get_number(arena, get_pc(process->pc) + 1, 1);
+
 	move_process(process, l);
 }
 
@@ -91,12 +113,12 @@ void	do_add(t_arena *arena, t_process *process)
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 3);
-	res = ft_endian(get_pc(process->reg[params[0] % REG_NUMBER]));
-	res += ft_endian(get_pc(process->reg[params[1] % REG_NUMBER]));
+	res = ft_endian(get_pc(process->reg[(params[0] - 1) % REG_NUMBER]));
+	res += ft_endian(get_pc(process->reg[(params[1] - 1) % REG_NUMBER]));
 	ft_endian_c((t_char*)&res);
-	ft_memcpy(process->reg[params[2] % REG_NUMBER], &res, REG_SIZE);
-	process->carry = 0;
+	ft_memcpy(process->reg[(params[2] - 1) % REG_NUMBER], &res, REG_SIZE);
 	move_process(process, l);
+	process->carry = 1;
 }
 
 void	do_sub(t_arena *arena, t_process *process)
@@ -106,46 +128,84 @@ void	do_sub(t_arena *arena, t_process *process)
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 3);
-	res = ft_endian(get_pc(process->reg[params[0] % REG_NUMBER]));
-	res -= ft_endian(get_pc(process->reg[params[1] % REG_NUMBER]));
+	res = ft_endian(get_pc(process->reg[(params[0] - 1) % REG_NUMBER]));
+	res -= ft_endian(get_pc(process->reg[(params[1] - 1) % REG_NUMBER]));
 	ft_endian_c((t_char*)&res);
-	ft_memcpy(process->reg[params[2] % REG_NUMBER], &res, REG_SIZE);
-	process->carry = 0;
-	move_process(process, l);
-}
-
-void	do_and(t_arena *arena, t_process *process)
-{
-	size_t	params[MAX_ARGS_NUMBER];
-	size_t	l;
-
-	l = get_params(arena, &params, get_pc(process->pc), 5);
-	move_process(process, l);
+	ft_memcpy(process->reg[(params[2] - 1) % REG_NUMBER], &res, REG_SIZE);
 	process->carry = 1;
-}
-
-void	do_or(t_arena *arena, t_process *process)
-{
-	size_t	params[MAX_ARGS_NUMBER];
-	size_t	l;
-
-	l = get_params(arena, &params, get_pc(process->pc), 6);
 	move_process(process, l);
 }
 
-void	do_xor(t_arena *arena, t_process *process)
+void	do_and(t_arena *arena, t_process *proc)
 {
-	size_t	params[MAX_ARGS_NUMBER];
+	size_t	p[MAX_ARGS_NUMBER];
+	size_t	mask;
 	size_t	l;
 
-	l = get_params(arena, &params, get_pc(process->pc), 7);
-	move_process(process, l);
+	l = get_params(arena, &p, get_pc(proc->pc), 5);
+	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
+	if (((mask & 0xc0) >> 6) == 1)
+		ft_memcpy(p, proc->reg[(p[0] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0xc0) >> 6) == 3)
+		p[0] = get_number(arena, p[0], 4);
+	if (((mask & 0x30) >> 4) == 1)
+		ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0x30) >> 4) == 3)
+		p[1] = get_number(arena, p[1], 4);
+	mask = (p[0] & p[1]);
+	ft_memcpy(proc->reg[(p[2] - 1) % REG_NUMBER], &mask, REG_SIZE);
+	move_process(proc, l);
+	proc->carry = 1;
+}
+
+void	do_or(t_arena *arena, t_process *proc)
+{
+	size_t	p[MAX_ARGS_NUMBER];
+	size_t	mask;
+	size_t	l;
+
+	l = get_params(arena, &p, get_pc(proc->pc), 5);
+	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
+	if (((mask & 0xc0) >> 6) == 1)
+		ft_memcpy(p, proc->reg[(p[0] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0xc0) >> 6) == 3)
+		p[0] = get_number(arena, p[0], 4);
+	if (((mask & 0x30) >> 4) == 1)
+		ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0x30) >> 4) == 3)
+		p[1] = get_number(arena, p[1], 4);
+	mask = (p[0] | p[1]);
+	ft_memcpy(proc->reg[(p[2] - 1) % REG_NUMBER], &mask, REG_SIZE);
+	move_process(proc, l);
+	proc->carry = 1;
+}
+
+void	do_xor(t_arena *arena, t_process *proc)
+{
+	size_t	p[MAX_ARGS_NUMBER];
+	size_t	mask;
+	size_t	l;
+
+	l = get_params(arena, &p, get_pc(proc->pc), 5);
+	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
+	if (((mask & 0xc0) >> 6) == 1)
+		ft_memcpy(p, proc->reg[(p[0] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0xc0) >> 6) == 3)
+		p[0] = get_number(arena, p[0], 4);
+	if (((mask & 0x30) >> 4) == 1)
+		ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
+	else if (((mask & 0x30) >> 4) == 3)
+		p[1] = get_number(arena, p[1], 4);
+	mask = (p[0] ^ p[1]);
+	ft_memcpy(proc->reg[(p[2] - 1) % REG_NUMBER], &mask, REG_SIZE);
+	move_process(proc, l);
+	proc->carry = 1;
 }
 
 void	do_zjmp(t_arena *arena, t_process *process)
 {
 	if (process->carry)
-		move_process(process, get_number(arena, get_pc(process->pc) + 1, 2));
+		move_process(process, get_number(arena, get_pc(process->pc) + 1, 2) % IDX_MOD);
 	else
 		move_process(process, 3);
 }
@@ -168,19 +228,24 @@ void	do_sti(t_arena *arena, t_process *process)
 
 	l = get_params(arena, &params, get_pc(process->pc), 10);
 	pc = get_pc(process->pc) + params[1] + params[2];
-	ft_memcpy(&value, process->reg[ft_endian(params[0]) % REG_NUMBER], 4);
+	ft_memcpy(&value, process->reg[(params[0] - 1) % REG_NUMBER], 4);
 	ft_endian_c((t_char*)&value);
-	print_in_map(arena, pc, (t_char*)&value, REG_SIZE);
-	ft_printf("%u printed at %u\n", process->reg[ft_endian(params[0]) % REG_NUMBER], params[1] + params[2]);
+	print_in_map(arena->arena, pc, (t_char*)&value, REG_SIZE);
+	value = (process->champ + 1) * (1 + 0x100 + 0x10000 + 0x1000000);
+	print_in_map(arena->territory, pc, (t_char*)&value, REG_SIZE);
 	move_process(process, l);
 }
 
 void	do_fork(t_arena *arena, t_process *process)
 {
+	t_list	*new;
 	size_t	params[MAX_ARGS_NUMBER];
 	size_t	l;
 
 	l = get_params(arena, &params, get_pc(process->pc), 11);
+	params[0] = params[0] % IDX_MOD;
+	new = new_process(arena, process, (t_char*)&params[0]);
+	ft_lstadd(&(arena->champs[process->champ].process), new);
 	move_process(process, l);
 }
 
@@ -204,10 +269,13 @@ void	do_lldi(t_arena *arena, t_process *process)
 
 void	do_lfork(t_arena *arena, t_process *process)
 {
+	t_list	*new;
 	size_t	params[MAX_ARGS_NUMBER];
 	size_t	l;
 
-	l = get_params(arena, &params, get_pc(process->pc), 14);
+	l = get_params(arena, &params, get_pc(process->pc), 11);
+	new = new_process(arena, process, (t_char*)&params[0]);
+	ft_lstadd(&(arena->champs[process->champ].process), new);
 	move_process(process, l);
 }
 
