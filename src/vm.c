@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/21 14:02:12 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/23 20:34:57 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ void	move_process(t_process *process, size_t n)
 	pc = get_pc(process->pc);
 	pc = (pc + n) % MEM_SIZE;
 	ft_memcpy(process->pc, &pc, REG_SIZE);
-	// ft_printf("pc moved to: %u | n=%u\n", pc, n);
+	// ft_printf("process moved to: %u | n=%u\n", pc, n);
 	ft_endian_c(process->pc);
 }
 
 void	execute(t_arena *arena, t_process *process)
 {
-	call_function(arena, process, process->todo[0]);
 	process->waiting = 0;
+	call_function(arena, process, process->todo[0]);
 }
 
 void	print_map(t_arena *arena, t_win *win)
@@ -64,17 +64,17 @@ void	print_map(t_arena *arena, t_win *win)
 	int		j;
 
 	win++;
-	sqrt = ft_sqrt(MEM_SIZE);
+	sqrt = ft_sqrt(MEM_SIZE) + 1;
 	i = 0;
 	color[0] = 237;
 	color[1] = 124;
 	color[2] = 18;
 	color[3] = 28;
 	color[4] = 227;
-	while (i <= sqrt)
+	while (i < sqrt)
 	{
 		j = 0;
-		while (j <= sqrt)
+		while (j < sqrt)
 		{
 			printf("\033[48;5;%dm%.2hhx ", color[arena->territory[i * sqrt + j]], arena->arena[i * sqrt + j]);
 			j++;
@@ -98,7 +98,7 @@ void	read_instruction(t_arena *arena, t_process *process)
 		i = 0;
 		while (i < ACTION_MAX_SIZE)
 		{
-			process->todo[i] = arena->arena[pc + i];
+			process->todo[i] = arena->arena[(pc + i) % MEM_SIZE];
 			i++;
 		}
 		process->waiting = 1;
@@ -157,7 +157,8 @@ void	virtual_machine(t_arena *arena, t_win *win)
 			if (process->cycles <= arena->cycle)
 				execute(arena, process);
 			// if (process->waiting)
-			// 	ft_printf("process is waiting for %s\n", g_op[process->todo[0] - 1].name);
+			// 	ft_printf("process is waiting for %s at %u\n", g_op[process->todo[0] - 1].name, get_pc(process->pc));
+			// getchar();
 			list = list->next;
 		}
 	}
