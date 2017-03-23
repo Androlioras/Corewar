@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ardanel <ardanel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/21 17:27:13 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/22 21:24:45 by ardanel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,26 @@ size_t	get_reg(t_process *process, t_char n, t_char *i)
 	return (get_pc(process->reg[(n - 1) % REG_NUMBER]));
 }
 
+t_char	verif_mask(size_t mask, t_char f)
+{
+	t_char	n;
+	t_char	i;
+
+	i = 0;
+	while (i < g_op[f].n_params)
+	{
+		n = ((mask & (0xc0 >> (2 * i))) >> (-2 * i + 6));
+		if ((n & 1) && !(g_op[f].params[i] & T_REG))
+			return (0);
+		else if ((n & 2) && !(g_op[f].params[i] & T_DIR))
+			return (0);
+		else if ((n & 3) && !(g_op[f].params[i] & T_IND))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 size_t	get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER], size_t pc,
 					t_char f)
 {
@@ -29,6 +49,8 @@ size_t	get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER], size_t pc,
 	mask = 1;
 	if (f != 11 && f != 14 && f != 8 && f != 0)
 		mask = get_number(ar, pc + 1, 1);
+	if (!(verif_mask(mask, f)))
+		return (0);
 	l = (mask != 1) ? 2 : 1;
 	i = 0;
 	while (i < g_op[f].n_params * 2)
