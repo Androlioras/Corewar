@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/21 13:27:35 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/24 13:10:12 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_list	*new_process(t_arena *arena, t_process *father, t_char pc[4])
 		return (NULL);
 	ft_memcpy(((t_process*)(new->content))->pc, pc, 4);
 	ft_endian_c(((t_process*)(new->content))->pc);
-	// ft_printf("new process at: %u\n", ft_endian(*(size_t*)(((t_process*)(new->content))->pc)));
 	return (new);
 }
 
@@ -61,6 +60,16 @@ void	place_champion(t_arena *arena, int i, int fd, size_t pc)
 		(arena->territory + pc)[j] = i + 1;
 		j++;
 	}
+	(arena->territory + pc)[0] += MAX_PLAYERS + 1;
+}
+
+void	init_default(t_process *def)
+{
+	ft_bzero((void*)&(def->reg), REG_NUMBER * REG_SIZE);
+	ft_bzero((void*)&(def->pc), REG_SIZE);
+	def->waiting = 0;
+	def->carry = 0;
+	def->cycles = 0;
 }
 
 void	creat_process(t_arena *arena, int n, int fd[4])
@@ -71,13 +80,9 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 	int			l;
 	int			e;
 
-	ft_bzero((void*)&(def.reg), REG_NUMBER * REG_SIZE);
-	ft_bzero((void*)&(def.pc), REG_SIZE);
-	def.waiting = 0;
-	def.carry = 0;
-	def.cycles = 0;
 	i = 0;
 	l = 0;
+	init_default(&def);
 	while (i < n)
 		l += ft_endian(arena->champs[i++].len);
 	i = 0;

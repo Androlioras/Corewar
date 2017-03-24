@@ -15,7 +15,12 @@ SRCS = corewar.c\
 	   vm.c\
 	   execution.c\
 	   window.c\
-	   op.c
+	   op.c\
+	   actions_1.c\
+	   actions_2.c\
+	   actions_3.c\
+	   actions_4.c\
+	   machine_action.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)

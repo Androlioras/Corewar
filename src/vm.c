@@ -6,49 +6,11 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/23 20:34:57 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/24 13:38:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
-
-size_t	get_number(t_arena *arena, size_t pc, t_char l)
-{
-	size_t	n;
-	size_t	i;
-
-	n = 0;
-	i = 0;
-	while (i < l)
-	{
-		n = n * 0x100 + arena->arena[(pc + i) % MEM_SIZE];
-		i++;
-	}
-	return (n);
-}
-
-size_t	get_pc(t_char pc[REG_SIZE])
-{
-	size_t	n;
-	size_t	i;
-
-	n = 0;
-	i = 0;
-	while (i < REG_SIZE)
-		n = n * 0x100 + pc[i++];
-	return (n);
-}
-
-void	move_process(t_process *process, size_t n)
-{
-	size_t	pc;
-
-	pc = get_pc(process->pc);
-	pc = (pc + n) % MEM_SIZE;
-	ft_memcpy(process->pc, &pc, REG_SIZE);
-	// ft_printf("process moved to: %u | n=%u\n", pc, n);
-	ft_endian_c(process->pc);
-}
 
 void	execute(t_arena *arena, t_process *process)
 {
@@ -56,10 +18,17 @@ void	execute(t_arena *arena, t_process *process)
 	call_function(arena, process, process->todo[0]);
 }
 
+/*
+**	remember that print_map must be remplaced in the future guys
+*/
+
 void	print_map(t_arena *arena, t_win *win)
 {
 	t_char	color[MAX_PLAYERS + 1];
+	int		back;
+	int		text;
 	int		sqrt;
+	int		tmp;
 	int		i;
 	int		j;
 
@@ -71,12 +40,21 @@ void	print_map(t_arena *arena, t_win *win)
 	color[2] = 18;
 	color[3] = 28;
 	color[4] = 227;
+	ft_printf("cycle: %u\n", arena->cycle);
 	while (i < sqrt)
 	{
 		j = 0;
 		while (j < sqrt)
 		{
-			printf("\033[48;5;%dm%.2hhx ", color[arena->territory[i * sqrt + j]], arena->arena[i * sqrt + j]);
+			text = 255;
+			back = color[arena->territory[i * sqrt + j] % (MAX_PLAYERS + 1)];
+			if (arena->territory[i * sqrt + j] > MAX_PLAYERS + 1)
+			{
+				tmp = text;
+				text = back;
+				back = tmp;
+			}
+			printf("\033[48;5;%dm\033[38;5;%dm%.2hhx ", back, text, arena->arena[i * sqrt + j]);
 			j++;
 		}
 		printf("\033[48;5;0m\n");
@@ -92,7 +70,7 @@ void	read_instruction(t_arena *arena, t_process *process)
 
 	pc = get_pc(process->pc);
 	if (arena->arena[pc] < 1 || arena->arena[pc] > 16)
-		move_process(process, 1);
+		move_process(arena, process, 1);
 	else
 	{
 		i = 0;
@@ -145,20 +123,16 @@ void	virtual_machine(t_arena *arena, t_win *win)
 		verif_lives(arena, win);
 	else
 		arena->to_die--;
-	// printf("cycle:%lu | to die: %lu | cycle to die: %lu\n", arena->cycle, arena->to_die, arena->cycle_to_die);
 	while (i < arena->n)
 	{
 		list = arena->champs[i++].process;
 		while (list)
 		{
 			process = (t_process*)list->content;
+			if (process->waiting && process->cycles <= arena->cycle)
+				execute(arena, process);
 			if (!process->waiting)
 				read_instruction(arena, process);
-			if (process->cycles <= arena->cycle)
-				execute(arena, process);
-			// if (process->waiting)
-			// 	ft_printf("process is waiting for %s at %u\n", g_op[process->todo[0] - 1].name, get_pc(process->pc));
-			// getchar();
 			list = list->next;
 		}
 	}

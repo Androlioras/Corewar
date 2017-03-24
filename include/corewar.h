@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/21 14:10:55 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/24 13:37:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include <sys/time.h>
 
 # define ACTION_MAX_SIZE	8
-# define WIN_W_SIZE			1920
-# define WIN_H_SIZE			1080
+# define WIN_W_SIZE			2560
+# define WIN_H_SIZE			1440
 # define MIN_FRAMERATE		60
 
 typedef unsigned char	t_char;
@@ -93,7 +93,7 @@ void				ft_error(int error, void *param);
 size_t				get_pc(t_char pc[REG_SIZE]);
 size_t				get_number(t_arena *arena, size_t pc, t_char l);
 
-void				move_process(t_process *process, size_t	n);
+void				move_process(t_arena *arena, t_process *process, size_t	n);
 
 size_t				ft_endian(size_t n);
 void				ft_endian_c(t_char *n);
@@ -108,10 +108,41 @@ void				create_champions(t_arena *arena, int n);
 void				kill_champion(t_champ *champ);
 
 void				creat_process(t_arena *arena, int n, int fd[MAX_PLAYERS]);
-t_list				*new_process(t_arena *arena, t_process *father, t_char pc[4]);
+t_list				*new_process(t_arena *arena, t_process *father,
+					t_char pc[4]);
 void				free_process(t_arena *arena);
 
+size_t				get_number(t_arena *arena, size_t pc, t_char l);
+size_t				get_pc(t_char pc[REG_SIZE]);
+void				print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n,
+					t_char l);
+void				move_process(t_arena *arena, t_process *process, size_t n);
+
 void				call_function(t_arena *arena, t_process *process, t_char f);
+
+size_t				get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER],
+					size_t pc, t_char f);
+t_char				verif_mask(size_t mask, t_char f);
+void				idx(size_t *pc, size_t n);
+void				print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n,
+					t_char l);
+
+void				do_live(t_arena *arena, t_process *process);
+void				do_ld(t_arena *arena, t_process *proc);
+void				do_st(t_arena *arena, t_process *process);
+void				do_add(t_arena *arena, t_process *process);
+void				do_sub(t_arena *arena, t_process *process);
+void				do_and(t_arena *arena, t_process *proc);
+void				do_or(t_arena *arena, t_process *proc);
+void				do_xor(t_arena *arena, t_process *proc);
+void				do_zjmp(t_arena *arena, t_process *process);
+void				do_ldi(t_arena *arena, t_process *proc);
+void				do_sti(t_arena *arena, t_process *proc);
+void				do_fork(t_arena *arena, t_process *process);
+void				do_lld(t_arena *arena, t_process *proc);
+void				do_lldi(t_arena *arena, t_process *process);
+void				do_lfork(t_arena *arena, t_process *process);
+void				do_aff(t_arena *arena, t_process *process);
 
 void				init_window(t_win *win);
 void				quit_window(t_win *win);

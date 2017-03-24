@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asm.h                                              :+:      :+:    :+:   */
+/*   actions_4.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/15 14:28:02 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/24 13:08:35 by pribault         ###   ########.fr       */
+/*   Created: 2017/03/24 13:25:29 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/24 13:25:54 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASM_H
-# define ASM_H
+#include "corewar.h"
 
-# include "op.h"
-# include "ft_printf.h"
-
-typedef struct	s_call
+void	do_aff(t_arena *arena, t_process *process)
 {
-	int			pc;
-	int			n;
-	int			size;
-	char		*label;
-}				t_call;
+	size_t	params[MAX_ARGS_NUMBER];
+	size_t	l;
 
-typedef struct	s_label
-{
-	int			pc;
-	char		*label;
-}				t_label;
-
-void			ft_error(int error, void *param);
-
-#endif
+	l = get_params(arena, &params, get_pc(process->pc), 15);
+	if (verif_mask(get_number(arena, get_pc(process->pc + 1) + 1, 1), 15))
+		ft_putchar(params[0]);
+	move_process(arena, process, l);
+}
