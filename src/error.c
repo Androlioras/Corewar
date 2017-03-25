@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 09:38:53 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/21 10:20:58 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/25 16:26:55 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static void	ft_error_2(int error, void *param)
 		ft_putendl_fd("internal error. wtf ?!?", 2);
 	else if (error == 8)
 		ft_putendl_fd(param, 2);
+	else if (error == 9)
+		ft_putendl_fd("Can't open font", 2);
 }
 
 void		ft_error(int error, void *param)
@@ -58,6 +60,6 @@ void		ft_error(int error, void *param)
 		ft_putendl_fd("Magiiiiiic :'(", 2);
 	else
 		ft_error_2(error, param);
-	if ((error >= 1 && error <= 8) || error == 666)
+	if ((error >= 1 && error <= 9) || error == 666)
 		exit(1);
 }

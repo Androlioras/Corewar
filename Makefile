@@ -4,7 +4,7 @@ CC = gcc
 SRC = src
 INCLUDE = include
 LIBFT = libft
-SDL = sdl2
+LIBS = lib
 FLAGS = -Wall -Wextra -Werror
 ENDFLAGS = -framework Appkit -framework OpenGL
 SRCS = corewar.c\
@@ -20,7 +20,9 @@ SRCS = corewar.c\
 	   actions_2.c\
 	   actions_3.c\
 	   actions_4.c\
-	   machine_action.c
+	   machine_action.c\
+	   draw.c\
+	   draw_2.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)
@@ -34,14 +36,14 @@ $(LIBFT)/libft.a:
 	make -C $(LIBFT)
 
 %.o: $(SRC)/%.c
-	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(SDL)/include -o $@ -c $^
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(LIBS)/include -o $@ -c $^
 
 $(INCLUDE)/corewar.h: $(OBJS)
 
 $(INCLUDE)/asm.h: $(OBJS2)
 
 $(NAME): $(LIBFT)/libft.a $(INCLUDE)/corewar.h $(OBJS)
-	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(SDL)/include -o $(NAME) $(OBJS) -L $(LIBFT) -lft -L $(SDL) -lSDL2 -lSDL2main $(ENDFLAGS)
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(LIBFT) -I $(LIBS)/include -o $(NAME) $(OBJS) -L $(LIBFT) -lft -L $(LIBS) -lSDL2 -lSDL2main -lSDL2_ttf $(ENDFLAGS)
 
 $(NAME2): $(LIBFT)/libft.a $(INCLUDE)/asm.h $(OBJS2)
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(SDL)/include -I $(LIBFT) -o $(NAME2) $(OBJS2) -L $(LIBFT) -lft

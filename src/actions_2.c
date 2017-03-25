@@ -122,7 +122,7 @@ void	do_ldi(t_arena *arena, t_process *proc)
 			ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
 		else if (((mask & 0x30) >> 4) == 3)
 			p[1] = get_number(arena, p[1], 4);
-		v = get_number(arena, p[0] + p[1], REG_SIZE);
+		v = get_number(arena, get_pc(proc->pc) + p[0] + p[1], REG_SIZE);
 		ft_memcpy(proc->reg[(p[2] - 1) % REG_NUMBER], (t_char*)&v, REG_SIZE);
 	}
 	move_process(arena, proc, l);

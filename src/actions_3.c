@@ -24,6 +24,10 @@ void	do_sti(t_arena *arena, t_process *proc)
 	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
 	if (verif_mask(mask, 10))
 	{
+		if (((mask & 0x30) >> 4) == 1)
+			ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
+		else if (((mask & 0x30) >> 4) == 3)
+			p[1] = get_number(arena, p[1], 4);
 		if (((mask & 0xc) >> 2) == 1)
 			ft_memcpy(p + 2, proc->reg[(p[2] - 1) % REG_NUMBER], REG_SIZE);
 		pc = get_pc(proc->pc) + p[1] + p[2];

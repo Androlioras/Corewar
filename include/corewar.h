@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/24 13:37:26 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/25 17:18:09 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ft_printf.h"
 # include "op.h"
 # include "SDL.h"
+# include "SDL_TTF.h"
 # include "OpenGL/gl3.h"
 # include <sys/time.h>
 
@@ -63,17 +64,21 @@ typedef struct		s_arena
 	size_t			cycle;
 	size_t			to_die;
 	size_t			cycle_to_die;
+	size_t			speed;
 }					t_arena;
 
 typedef struct		s_win
 {
 	SDL_Window		*win;
+	SDL_Renderer	*render;
 	SDL_GLContext	context;
 	SDL_Event		events;
+	TTF_Font		*font;
 	char			*name;
 	int				w;
 	int				h;
 	t_char			stop;
+	t_char			pause;
 }					t_win;
 
 typedef struct		s_op
@@ -87,6 +92,13 @@ typedef struct		s_op
 	char			carry;
 	char			modif;
 }					t_op;
+typedef struct		s_color
+{
+	t_char			r;
+	t_char			g;
+	t_char			b;
+	t_char			a;
+}					t_color;
 
 void				ft_error(int error, void *param);
 
@@ -147,6 +159,11 @@ void				do_aff(t_arena *arena, t_process *process);
 void				init_window(t_win *win);
 void				quit_window(t_win *win);
 
-extern t_op	g_op[17];
+void				print_map(t_arena *arena, t_win *win);
+void				print_text(t_win *win, char *text, SDL_Rect *rect,
+					SDL_Color *color);
+
+extern t_op		g_op[17];
+extern t_color	g_colors[MAX_PLAYERS + 1][3];
 
 #endif

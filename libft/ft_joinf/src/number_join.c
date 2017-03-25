@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:06:03 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/15 14:57:16 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/25 17:02:05 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,19 @@ static size_t	numberlen(long long int nbr)
 void			print_number(va_list va, char *new, size_t *j)
 {
 	long long int	nbr;
-	long long int	save;
+	long long int	pow;
+	char			c;
 
 	nbr = va_arg(va, long long int);
-	while (nbr)
+	pow = 1;
+	while (pow * 10 <= nbr)
+		pow *= 10;
+	while (pow > 0)
 	{
-		save = nbr;
-		while (nbr > 10)
-			nbr /= 10;
-		new[(*j)++] = '0' + nbr;
-		while (nbr <= save / 10)
-			nbr *= 10;
-		nbr = save - nbr;
+		c = nbr / pow;
+		new[(*j)++] = c + '0';
+		nbr -= c * pow;
+		pow /= 10;
 	}
 }
 

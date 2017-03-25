@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_sqrt.c                                          :+:      :+:    :+:   */
+/*   draw_2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/03 19:30:09 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 13:10:16 by pribault         ###   ########.fr       */
+/*   Created: 2017/03/25 16:08:49 by pribault          #+#    #+#             */
+/*   Updated: 2017/03/25 16:40:29 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "corewar.h"
 
-int		ft_sqrt(int n)
+void	print_text(t_win *win, char *text, SDL_Rect *rect, SDL_Color *color)
 {
-	int		i;
+	SDL_Texture	*texture;
+	SDL_Surface	*surface;
 
-	if (n <= 0)
-		return (0);
-	i = 1;
-	while (i * i <= n)
-		i++;
-	if (i * i - n < n - (i + 1) * (i + 1))
-		return (i);
-	return (i - 1);
+	surface = TTF_RenderText_Solid(win->font, text, *color);
+	texture = SDL_CreateTextureFromSurface(win->render, surface);
+	SDL_FreeSurface(surface);
+	SDL_RenderCopy(win->render, texture, NULL, rect);
+	SDL_DestroyTexture(texture);
 }

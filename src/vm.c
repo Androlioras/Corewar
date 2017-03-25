@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/24 13:38:26 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/25 17:18:29 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	execute(t_arena *arena, t_process *process)
 **	remember that print_map must be remplaced in the future guys
 */
 
-void	print_map(t_arena *arena, t_win *win)
+/*void	print_map(t_arena *arena, t_win *win)
 {
 	t_char	color[MAX_PLAYERS + 1];
 	int		back;
@@ -61,7 +61,7 @@ void	print_map(t_arena *arena, t_win *win)
 		i++;
 	}
 	ft_putchar('\n');
-}
+}*/
 
 void	read_instruction(t_arena *arena, t_process *process)
 {
@@ -119,7 +119,7 @@ void	virtual_machine(t_arena *arena, t_win *win)
 	t_char		i;
 
 	i = 0;
-	if (!arena->to_die)
+	if (!arena->to_die || arena->to_die > arena->cycle_to_die)
 		verif_lives(arena, win);
 	else
 		arena->to_die--;
