@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 16:45:19 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/26 12:42:17 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void	ft_init(t_arena *arena, t_win *win)
 	ft_bzero(&arena->arena, MEM_SIZE);
 	ft_bzero(&arena->territory, MEM_SIZE);
 	win->name = "Corewar";
-	win->w = 1920;
-	win->h = 1080;
+	win->w = 640;
+	win->h = 480;
 	win->stop = 0;
 	win->pause = 0;
 }

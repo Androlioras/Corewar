@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 17:18:09 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/26 13:05:59 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct		s_arena
 	size_t			cycle;
 	size_t			to_die;
 	size_t			cycle_to_die;
+	size_t			checks;
 	size_t			speed;
 }					t_arena;
 
@@ -92,6 +93,7 @@ typedef struct		s_op
 	char			carry;
 	char			modif;
 }					t_op;
+
 typedef struct		s_color
 {
 	t_char			r;

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 17:18:29 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/26 13:10:19 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,19 @@ void	read_instruction(t_arena *arena, t_process *process)
 	}
 }
 
+void	decrease(t_arena *arena, size_t lives)
+{
+	arena->checks += (lives < NBR_LIVE) ? 1 : 0;
+	if (arena->checks >= MAX_CHECKS || lives >= NBR_LIVE)
+	{
+		if (arena->cycle_to_die > CYCLE_DELTA)
+			arena->cycle_to_die -= CYCLE_DELTA;
+		else
+			arena->cycle_to_die -= arena->cycle_to_die;
+		arena->checks = 0;
+	}
+}
+
 void	verif_lives(t_arena *arena, t_win *win)
 {
 	size_t	lives;
@@ -102,11 +115,9 @@ void	verif_lives(t_arena *arena, t_win *win)
 			kill_champion(&arena->champs[i]);
 		else
 			arena->last = i;
-		arena->champs[i].live = 0;
-		i++;
+		arena->champs[i++].live = 0;
 	}
-	if (lives >= NBR_LIVE)
-		arena->cycle_to_die -= CYCLE_DELTA;
+	decrease(arena, lives);
 	if (!living)
 		win->stop = 1;
 	arena->to_die = arena->cycle_to_die;
