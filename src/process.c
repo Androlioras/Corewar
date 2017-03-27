@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 13:55:26 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:11:34 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void	free_process(t_arena *arena)
 	}
 }
 
-void	place_champion(t_arena *arena, int i, int fd, size_t pc)
+void	place_champion(t_arena *arena, int i, int fd, t_uint pc)
 {
 	char	code[CHAMP_MAX_SIZE];
 	int		m;
-	size_t	j;
+	t_uint	j;
 
 	m = ft_endian(arena->champs[i].len);
 	if ((read(fd, code, m)) == -1)
@@ -75,7 +75,7 @@ void	init_default(t_process *def)
 void	creat_process(t_arena *arena, int n, int fd[4])
 {
 	t_process	def;
-	size_t		pc;
+	t_uint		pc;
 	int			i;
 	int			l;
 	int			e;
@@ -89,7 +89,7 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 	e = (MEM_SIZE - l) / n;
 	while (i < n)
 	{
-		def.champ = (size_t)i;
+		def.champ = (t_uint)i;
 		ft_memcpy(def.reg[0], &(arena->champs[i].id), REG_SIZE);
 		pc = (i == 0) ? 0 : pc + ft_endian(arena->champs[i - 1].len) + e;
 		place_champion(arena, i, fd[i], pc);

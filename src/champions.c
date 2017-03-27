@@ -6,15 +6,15 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 14:39:19 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/26 13:11:17 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:10:29 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-size_t	ft_endian(size_t n)
+t_uint	ft_endian(t_uint n)
 {
-	size_t	r;
+	t_uint	r;
 
 	r = 0;
 	r += ((n & 0xff000000) / 0x1000000);

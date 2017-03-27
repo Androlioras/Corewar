@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/26 13:05:59 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:09:03 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,15 @@
 # define WIN_W_SIZE			2560
 # define WIN_H_SIZE			1440
 # define MIN_FRAMERATE		60
+# define HEXA				"0123456789abcdef"
 
 typedef unsigned char	t_char;
+typedef unsigned int	t_uint;
 
 typedef struct		s_flags
 {
-	size_t			flags;
+	t_uint			flags;
+	t_uint			dump;
 }					t_flags;
 
 typedef struct		s_process
@@ -38,18 +41,18 @@ typedef struct		s_process
 	t_char			pc[REG_SIZE];
 	char			waiting;
 	char			carry;
-	size_t			cycles;
+	t_uint			cycles;
 	t_char			todo[ACTION_MAX_SIZE];
-	size_t			champ;
+	t_uint			champ;
 }					t_process;
 
 typedef struct		s_champ
 {
 	char			name[PROG_NAME_LENGTH + 1];
 	char			comment[COMMENT_LENGTH + 1];
-	size_t			len;
-	size_t			live;
-	size_t			id;
+	t_uint			len;
+	t_uint			live;
+	t_uint			id;
 	t_list			*process;
 }					t_champ;
 
@@ -61,18 +64,17 @@ typedef struct		s_arena
 	t_champ			champs[MAX_PLAYERS];
 	t_char			n;
 	t_char			last;
-	size_t			cycle;
-	size_t			to_die;
-	size_t			cycle_to_die;
-	size_t			checks;
-	size_t			speed;
+	t_uint			cycle;
+	t_uint			to_die;
+	t_uint			cycle_to_die;
+	t_uint			checks;
+	t_uint			speed;
 }					t_arena;
 
 typedef struct		s_win
 {
 	SDL_Window		*win;
 	SDL_Renderer	*render;
-	SDL_GLContext	context;
 	SDL_Event		events;
 	TTF_Font		*font;
 	char			*name;
@@ -88,7 +90,7 @@ typedef struct		s_op
 	char			n_params;
 	t_char			params[3];
 	char			n;
-	size_t			cycles;
+	t_uint			cycles;
 	char			*comment;
 	char			carry;
 	char			modif;
@@ -104,12 +106,12 @@ typedef struct		s_color
 
 void				ft_error(int error, void *param);
 
-size_t				get_pc(t_char pc[REG_SIZE]);
-size_t				get_number(t_arena *arena, size_t pc, t_char l);
+t_uint				get_pc(t_char pc[REG_SIZE]);
+t_uint				get_number(t_arena *arena, t_uint pc, t_char l);
 
-void				move_process(t_arena *arena, t_process *process, size_t	n);
+void				move_process(t_arena *arena, t_process *process, t_uint	n);
 
-size_t				ft_endian(size_t n);
+t_uint				ft_endian(t_uint n);
 void				ft_endian_c(t_char *n);
 
 void				virtual_machine(t_arena *arena, t_win *win);
@@ -126,19 +128,19 @@ t_list				*new_process(t_arena *arena, t_process *father,
 					t_char pc[4]);
 void				free_process(t_arena *arena);
 
-size_t				get_number(t_arena *arena, size_t pc, t_char l);
-size_t				get_pc(t_char pc[REG_SIZE]);
-void				print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n,
+t_uint				get_number(t_arena *arena, t_uint pc, t_char l);
+t_uint				get_pc(t_char pc[REG_SIZE]);
+void				print_in_map(t_char arena[MEM_SIZE], t_uint pc, t_char *n,
 					t_char l);
-void				move_process(t_arena *arena, t_process *process, size_t n);
+void				move_process(t_arena *arena, t_process *process, t_uint n);
 
 void				call_function(t_arena *arena, t_process *process, t_char f);
 
-size_t				get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER],
-					size_t pc, t_char f);
-t_char				verif_mask(size_t mask, t_char f);
-void				idx(size_t *pc, size_t n);
-void				print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n,
+t_uint				get_params(t_arena *ar, t_uint (*p)[MAX_ARGS_NUMBER],
+					t_uint pc, t_char f);
+t_char				verif_mask(t_uint mask, t_char f);
+void				idx(t_uint *pc, t_uint n);
+void				print_in_map(t_char arena[MEM_SIZE], t_uint pc, t_char *n,
 					t_char l);
 
 void				do_live(t_arena *arena, t_process *process);
@@ -162,8 +164,10 @@ void				init_window(t_win *win);
 void				quit_window(t_win *win);
 
 void				print_map(t_arena *arena, t_win *win);
+void				draw_debug(t_arena *arena, t_win *win);
 void				print_text(t_win *win, char *text, SDL_Rect *rect,
 					SDL_Color *color);
+void				print_and_exit(t_arena *arena, t_win *win);
 
 extern t_op		g_op[17];
 extern t_color	g_colors[MAX_PLAYERS + 1][3];

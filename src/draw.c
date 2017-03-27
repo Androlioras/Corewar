@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 13:04:54 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/25 17:14:20 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:10:59 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ void	print_fps(t_win *win)
 	if (count++ >= 60)
 	{
 		fps = 1000000 * (t.tv_sec - prev.tv_sec);
-		fps = 1000000 / (fps + t.tv_usec - prev.tv_usec);
+		if (fps + t.tv_usec - prev.tv_usec != 0)
+			fps = 1000000 / (fps + t.tv_usec - prev.tv_usec);
+		else
+			fps = MIN_FRAMERATE;
 		s = ft_joinf("%s | fps:%d", win->name, fps);
 		SDL_SetWindowTitle(win->win, s);
 		free(s);
@@ -123,6 +126,8 @@ void	print_map(t_arena *arena, t_win *win)
 	rect.y = 0;
 	SDL_SetRenderDrawColor(win->render, 192, 192, 192, 0);
 	SDL_RenderDrawRect(win->render, &rect);
+	if (arena->flags.flags & 2)
+		draw_debug(arena, win);
 	draw_arena(arena, win, arena_size - 2);
 	print_panel(arena, win, arena_size);
 	SDL_RenderPresent(win->render);

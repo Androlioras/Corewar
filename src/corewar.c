@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/26 12:42:17 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:29:02 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	ft_keys(t_arena *arena, t_win *win)
 		arena->speed += 10;
 	else if (win->events.key.keysym.sym == SDLK_LEFT && arena->speed >= 10)
 		arena->speed -= 10;
+	else if (win->events.window.event == SDLK_d)
+		draw_debug(arena, win);
 }
 
 int		must_print(void)
@@ -72,10 +74,12 @@ int		must_run(t_arena *arena)
 void	ft_init(t_arena *arena, t_win *win)
 {
 	arena->flags.flags = 0;
+	arena->flags.dump = 0;
 	arena->cycle = 0;
 	arena->cycle_to_die = CYCLE_TO_DIE;
 	arena->to_die = CYCLE_TO_DIE;
 	arena->speed = 10;
+	arena->last = MAX_PLAYERS;
 	ft_bzero(&arena->arena, MEM_SIZE);
 	ft_bzero(&arena->territory, MEM_SIZE);
 	win->name = "Corewar";
@@ -87,27 +91,29 @@ void	ft_init(t_arena *arena, t_win *win)
 
 int		main(int argc, char **argv)
 {
-	t_arena	arena;
 	t_win	win;
+	t_arena	arena;
 
 	ft_init(&arena, &win);
 	get_flags(&arena, argc, argv);
-	if (arena.flags.flags & 1)
+	if ((arena.flags.flags & 1) || (arena.flags.flags & 2))
 		init_window(&win);
 	while (!win.stop)
 	{
 		if (SDL_PollEvent(&(win.events)))
 			ft_keys(&arena, &win);
-		if (!win.pause && must_run(&arena))
+		if ((arena.flags.flags & 4) || (!win.pause && must_run(&arena)))
 			virtual_machine(&arena, &win);
-		if (must_print() && (arena.flags.flags & 1))
+		if (must_print() && (arena.flags.flags & 3))
 			print_map(&arena, &win);
 	}
-	if (win.stop == 1)
-		ft_printf("le joueur %u(%s) a gagne\n",
+	if (arena.flags.flags & 4)
+		draw_debug(&arena, &win);
+	if (win.stop == 1 && arena.last < MAX_PLAYERS)
+		ft_printf("le joueur %hhu(%s) a gagne\n",
 		arena.last + 1, arena.champs[arena.last].name);
 	free_process(&arena);
-	if (arena.flags.flags & 1)
+	if ((arena.flags.flags & 1) || (arena.flags.flags & 2))
 		quit_window(&win);
 	return (0);
 }

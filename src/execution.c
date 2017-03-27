@@ -6,13 +6,13 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/24 13:28:12 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:10:03 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-void	idx(size_t *pc, size_t n)
+void	idx(t_uint *pc, t_uint n)
 {
 	if (n % MEM_SIZE > MEM_SIZE / 2)
 		*pc -= (IDX_MOD - (n % IDX_MOD));
@@ -20,7 +20,7 @@ void	idx(size_t *pc, size_t n)
 		*pc += (n % IDX_MOD);
 }
 
-t_char	verif_mask(size_t mask, t_char f)
+t_char	verif_mask(t_uint mask, t_char f)
 {
 	t_char	n;
 	t_char	i;
@@ -40,11 +40,11 @@ t_char	verif_mask(size_t mask, t_char f)
 	return (1);
 }
 
-size_t	get_params(t_arena *ar, size_t (*p)[MAX_ARGS_NUMBER], size_t pc,
+t_uint	get_params(t_arena *ar, t_uint (*p)[MAX_ARGS_NUMBER], t_uint pc,
 					t_char f)
 {
-	size_t	mask;
-	size_t	l;
+	t_uint	mask;
+	t_uint	l;
 	t_char	i;
 
 	mask = 1;

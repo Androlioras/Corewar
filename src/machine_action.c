@@ -6,16 +6,16 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 13:34:08 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/24 13:35:03 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/27 20:11:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-size_t	get_number(t_arena *arena, size_t pc, t_char l)
+t_uint	get_number(t_arena *arena, t_uint pc, t_char l)
 {
-	size_t	n;
-	size_t	i;
+	t_uint	n;
+	t_uint	i;
 
 	n = 0;
 	i = 0;
@@ -27,10 +27,10 @@ size_t	get_number(t_arena *arena, size_t pc, t_char l)
 	return (n);
 }
 
-size_t	get_pc(t_char pc[REG_SIZE])
+t_uint	get_pc(t_char pc[REG_SIZE])
 {
-	size_t	n;
-	size_t	i;
+	t_uint	n;
+	t_uint	i;
 
 	n = 0;
 	i = 0;
@@ -39,9 +39,9 @@ size_t	get_pc(t_char pc[REG_SIZE])
 	return (n);
 }
 
-void	print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n, t_char l)
+void	print_in_map(t_char arena[MEM_SIZE], t_uint pc, t_char *n, t_char l)
 {
-	size_t	i;
+	t_uint	i;
 
 	i = 0;
 	while (i < l)
@@ -51,9 +51,9 @@ void	print_in_map(t_char arena[MEM_SIZE], size_t pc, t_char *n, t_char l)
 	}
 }
 
-void	move_process(t_arena *arena, t_process *process, size_t n)
+void	move_process(t_arena *arena, t_process *process, t_uint n)
 {
-	size_t	pc;
+	t_uint	pc;
 
 	pc = get_pc(process->pc);
 	arena->territory[pc] = arena->territory[pc] % (MAX_PLAYERS + 1);
