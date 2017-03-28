@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:29:03 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 15:57:39 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,27 +54,23 @@ void	decrease(t_arena *arena, t_uint lives)
 
 void	verif_lives(t_arena *arena, t_win *win)
 {
-	t_uint	lives;
-	t_char	living;
-	t_char	i;
+	t_process	*process;
+	t_list		*list;
 
-	lives = 0;
-	living = 0;
-	i = 0;
-	while (i < arena->n)
+	list = arena->process;
+	while (list)
 	{
-		if (arena->champs[i].process)
-			living++;
-		lives += arena->champs[i].live;
-		if (!arena->champs[i].live && arena->champs[i].process)
-			kill_champion(&arena->champs[i]);
+		process = (t_process*)list->content;
+		if (!process->living)
+			kill_process(&(arena->process), list);
 		else
-			arena->last = i;
-		arena->champs[i++].live = 0;
+			process->living = 0;
+		list = list->next;
 	}
-	decrease(arena, lives);
-	if (!living)
+	decrease(arena, arena->lives);
+	if (!arena->lives)
 		win->stop = 1;
+	arena->lives = 0;
 	arena->to_die = arena->cycle_to_die;
 }
 
@@ -82,27 +78,22 @@ void	virtual_machine(t_arena *arena, t_win *win)
 {
 	t_list		*list;
 	t_process	*process;
-	t_char		i;
 
-	i = 0;
 	if ((arena->flags.flags & 4) && arena->flags.dump <= arena->cycle)
 		win->stop = 1;
 	if (!arena->to_die || arena->to_die > arena->cycle_to_die)
 		verif_lives(arena, win);
 	else
 		arena->to_die--;
-	while (i < arena->n)
+	list = arena->process;
+	while (list)
 	{
-		list = arena->champs[i++].process;
-		while (list)
-		{
-			process = (t_process*)list->content;
-			if (process->waiting && process->cycles <= arena->cycle)
-				execute(arena, process);
-			if (!process->waiting)
-				read_instruction(arena, process);
-			list = list->next;
-		}
+		process = (t_process*)list->content;
+		if (process->waiting && process->cycles <= arena->cycle)
+			execute(arena, process);
+		if (!process->waiting)
+			read_instruction(arena, process);
+		list = list->next;
 	}
 	arena->cycle++;
 }

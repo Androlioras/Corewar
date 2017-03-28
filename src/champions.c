@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 14:39:19 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:10:29 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 15:52:46 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_endian_c(t_char *n)
 	n[3] = r[0];
 }
 
-void	kill_champion(t_champ *chp)
+/*void	kill_champion(t_champ *chp)
 {
 	t_list	*list;
 	t_list	*next;
@@ -50,7 +50,7 @@ void	kill_champion(t_champ *chp)
 	}
 	chp->process = NULL;
 	ft_printj("%s have been punched out by the virtual Foam bat\n", chp->name);
-}
+}*/
 
 void	create_champions(t_arena *ar, int n)
 {
@@ -71,7 +71,6 @@ void	create_champions(t_arena *ar, int n)
 		ft_memcpy(ar->champs[i].comment, header.comment, COMMENT_LENGTH + 1);
 		ar->champs[i].len = header.prog_size;
 		ar->champs[i].id = 0xffffffff - i;
-		ar->champs[i].live = 0;
 		if (ft_endian(ar->champs[i++].len) > CHAMP_MAX_SIZE)
 			ft_error(7, ar->champs[i - 1].name);
 	}

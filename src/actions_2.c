@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 13:12:50 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:09:25 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 19:51:34 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,8 @@ void	do_ldi(t_arena *arena, t_process *proc)
 		p[0] = get_number(arena, p[0], 4);
 	if (((mask & 0x30) >> 4) == 1)
 		ft_memcpy(p + 1, proc->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
-	mask = get_pc(proc->pc) + p[0];
-	idx(&mask, p[1]);
+	mask = get_pc(proc->pc);
+	idx(&mask, p[0] + p[1]);
 	v = get_number(arena, mask, REG_SIZE);
 	ft_memcpy(proc->reg[(p[2] - 1) % REG_NUMBER], &v, REG_SIZE);
 	proc->carry = (!v) ? 1 : 0;

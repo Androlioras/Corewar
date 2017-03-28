@@ -22,7 +22,8 @@ SRCS = corewar.c\
 	   actions_4.c\
 	   machine_action.c\
 	   draw.c\
-	   draw_2.c
+	   draw_2.c\
+	   process_2.c
 SRCS2 = asm.c\
 		error.c
 OBJS = $(SRCS:.c=.o)

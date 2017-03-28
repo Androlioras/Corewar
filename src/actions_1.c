@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 13:12:44 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:33:12 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 20:00:52 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ void	do_live(t_arena *arena, t_process *process)
 		if (arena->champs[i].id == id)
 		{
 			if (arena->flags.flags & 2)
-			ft_printf("un processus dit que le joueur %d(%s) est en vie\n",
+				ft_printf("un processus dit que le joueur %d(%s) est en vie\n",
 			i + 1, arena->champs[i].name);
-			arena->champs[i].live++;
+			arena->lives++;
+			arena->last = i;
 		}
 		i++;
 	}
+	process->living = 1;
 	move_process(arena, process, 5);
 }
 
@@ -37,12 +39,17 @@ void	do_ld(t_arena *arena, t_process *proc)
 {
 	t_uint	p[MAX_ARGS_NUMBER];
 	t_uint	mask;
+	t_uint	pc;
 	t_uint	l;
 
-	l = get_params(arena, &p, get_pc(proc->pc), 1);
-	mask = get_number(arena, get_pc(proc->pc) + 1, 1);
+	pc = get_pc(proc->pc);
+	l = get_params(arena, &p, pc, 1);
+	mask = get_number(arena, pc + 1, 1);
 	if (((mask & 0xc0) >> 6) == 3)
-		p[0] = get_number(arena, p[0], 4);
+	{
+		idx(&pc, p[0]);
+		p[0] = get_number(arena, pc, 4);
+	}
 	ft_memcpy(proc->reg[(p[1] - 1) % REG_NUMBER], p, REG_SIZE);
 	proc->carry = (!p[0]) ? 1 : 0;
 	move_process(arena, proc, l);
@@ -63,11 +70,10 @@ void	do_st(t_arena *arena, t_process *process)
 	pc = get_pc(process->pc);
 	idx(&pc, p[1]);
 	ft_memcpy(&value, process->reg[(p[0] - 1) % REG_NUMBER], 4);
-	// ft_endian_c((t_char*)&value);
 	print_in_map(arena->arena, pc, (t_char*)&value, REG_SIZE);
 	p[0] = (process->champ + 1) * (1 + 0x100 + 0x10000 + 0x1000000);
 	print_in_map(arena->territory, pc, (t_char*)p, REG_SIZE);
-	process->carry = (!value) ? 1 : 0;
+	// process->carry = (!value) ? 1 : 0;
 	move_process(arena, process, l);
 }
 

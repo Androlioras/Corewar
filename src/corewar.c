@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:29:02 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 16:31:59 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,14 @@ void	ft_init(t_arena *arena, t_win *win)
 	arena->to_die = CYCLE_TO_DIE;
 	arena->speed = 10;
 	arena->last = MAX_PLAYERS;
+	arena->process = NULL;
 	ft_bzero(&arena->arena, MEM_SIZE);
 	ft_bzero(&arena->territory, MEM_SIZE);
 	win->name = "Corewar";
 	win->w = 640;
 	win->h = 480;
 	win->stop = 0;
-	win->pause = 0;
+	win->pause = 1;
 }
 
 int		main(int argc, char **argv)
@@ -102,7 +103,7 @@ int		main(int argc, char **argv)
 	{
 		if (SDL_PollEvent(&(win.events)))
 			ft_keys(&arena, &win);
-		if ((arena.flags.flags & 4) || (!win.pause && must_run(&arena)))
+		if (!(arena.flags.flags & 3) || (!win.pause && must_run(&arena)))
 			virtual_machine(&arena, &win);
 		if (must_print() && (arena.flags.flags & 3))
 			print_map(&arena, &win);
@@ -112,7 +113,7 @@ int		main(int argc, char **argv)
 	if (win.stop == 1 && arena.last < MAX_PLAYERS)
 		ft_printf("le joueur %hhu(%s) a gagne\n",
 		arena.last + 1, arena.champs[arena.last].name);
-	free_process(&arena);
+	free_all_process(&arena);
 	if ((arena.flags.flags & 1) || (arena.flags.flags & 2))
 		quit_window(&win);
 	return (0);

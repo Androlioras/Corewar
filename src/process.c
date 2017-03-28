@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 16:10:05 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:11:34 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 15:55:48 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,18 @@ t_list	*new_process(t_arena *arena, t_process *father, t_char pc[4])
 	return (new);
 }
 
-void	free_process(t_arena *arena)
+void	free_all_process(t_arena *arena)
 {
 	t_list	*list;
 	t_list	*next;
-	t_char	i;
 
-	i = 0;
-	while (i < arena->n)
+	list = arena->process;
+	while (list)
 	{
-		list = arena->champs[i++].process;
-		while (list)
-		{
-			next = list->next;
-			free(list->content);
-			free(list);
-			list = next;
-		}
+		next = list->next;
+		free(list->content);
+		free(list);
+		list = next;
 	}
 }
 
@@ -93,7 +88,7 @@ void	creat_process(t_arena *arena, int n, int fd[4])
 		ft_memcpy(def.reg[0], &(arena->champs[i].id), REG_SIZE);
 		pc = (i == 0) ? 0 : pc + ft_endian(arena->champs[i - 1].len) + e;
 		place_champion(arena, i, fd[i], pc);
-		arena->champs[i].process = new_process(arena, &def, (t_char*)&pc);
+		ft_lstadd(&arena->process, new_process(arena, &def, (t_char*)&pc));
 		i++;
 	}
 }

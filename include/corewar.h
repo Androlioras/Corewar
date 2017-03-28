@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:09:03 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 16:50:36 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct		s_process
 	t_char			reg[REG_NUMBER][REG_SIZE];
 	t_char			pc[REG_SIZE];
 	char			waiting;
+	char			living;
 	char			carry;
 	t_uint			cycles;
 	t_char			todo[ACTION_MAX_SIZE];
@@ -51,9 +52,7 @@ typedef struct		s_champ
 	char			name[PROG_NAME_LENGTH + 1];
 	char			comment[COMMENT_LENGTH + 1];
 	t_uint			len;
-	t_uint			live;
 	t_uint			id;
-	t_list			*process;
 }					t_champ;
 
 typedef struct		s_arena
@@ -62,6 +61,8 @@ typedef struct		s_arena
 	t_char			arena[MEM_SIZE];
 	t_char			territory[MEM_SIZE];
 	t_champ			champs[MAX_PLAYERS];
+	t_list			*process;
+	t_uint			lives;
 	t_char			n;
 	t_char			last;
 	t_uint			cycle;
@@ -92,7 +93,7 @@ typedef struct		s_op
 	char			n;
 	t_uint			cycles;
 	char			*comment;
-	char			carry;
+	char			opcode;
 	char			modif;
 }					t_op;
 
@@ -115,18 +116,20 @@ t_uint				ft_endian(t_uint n);
 void				ft_endian_c(t_char *n);
 
 void				virtual_machine(t_arena *arena, t_win *win);
+void				read_instruction(t_arena *arena, t_process *process);
 void				print_map(t_arena *arena, t_win *win);
 
 void				get_flags(t_arena *arena, int argc, char **argv);
 
 void				create_champions(t_arena *arena, int n);
 
-void				kill_champion(t_champ *champ);
+// void				kill_champion(t_champ *champ);
 
 void				creat_process(t_arena *arena, int n, int fd[MAX_PLAYERS]);
 t_list				*new_process(t_arena *arena, t_process *father,
 					t_char pc[4]);
-void				free_process(t_arena *arena);
+void				free_all_process(t_arena *arena);
+void				kill_process(t_list **head, t_list *process);
 
 t_uint				get_number(t_arena *arena, t_uint pc, t_char l);
 t_uint				get_pc(t_char pc[REG_SIZE]);

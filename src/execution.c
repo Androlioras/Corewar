@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 20:10:03 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/28 19:19:27 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	idx(t_uint *pc, t_uint n)
 {
+	// long	goal;
+
+	// goal = ((long)((*pc + n) % MEM_SIZE) - *pc) % IDX_MOD;
+	// ft_printf("n: %x pc: %u goal: %d \n", n, *pc, goal);
+	// *pc += goal;
 	if (n % MEM_SIZE > MEM_SIZE / 2)
 		*pc -= (IDX_MOD - (n % IDX_MOD));
 	else
