@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 13:12:44 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/28 20:00:52 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/29 15:14:11 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	do_ld(t_arena *arena, t_process *proc)
 		idx(&pc, p[0]);
 		p[0] = get_number(arena, pc, 4);
 	}
+	ft_endian_c((t_char*)p);
 	ft_memcpy(proc->reg[(p[1] - 1) % REG_NUMBER], p, REG_SIZE);
 	proc->carry = (!p[0]) ? 1 : 0;
 	move_process(arena, proc, l);
@@ -63,13 +64,13 @@ void	do_st(t_arena *arena, t_process *process)
 	t_uint	pc;
 	t_uint	l;
 
-	l = get_params(arena, &p, get_pc(process->pc), 2);
-	mask = get_number(arena, get_pc(process->pc) + 1, 1);
-	if (((mask & 0x30) >> 4) == 1)
-		ft_memcpy(p + 1, process->reg[(p[1] - 1) % REG_NUMBER], REG_SIZE);
 	pc = get_pc(process->pc);
+	l = get_params(arena, &p, pc, 2);
+	mask = get_number(arena, pc + 1, 1);
+	if (((mask & 0x30) >> 4) == 1)
+		p[1] = get_pc(process->reg[(p[1] - 1) % REG_NUMBER]);
 	idx(&pc, p[1]);
-	ft_memcpy(&value, process->reg[(p[0] - 1) % REG_NUMBER], 4);
+	ft_memcpy(&value, process->reg[(p[0] - 1) % REG_NUMBER], REG_SIZE);
 	print_in_map(arena->arena, pc, (t_char*)&value, REG_SIZE);
 	p[0] = (process->champ + 1) * (1 + 0x100 + 0x10000 + 0x1000000);
 	print_in_map(arena->territory, pc, (t_char*)p, REG_SIZE);

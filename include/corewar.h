@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/28 16:50:36 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/29 17:19:16 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,6 @@ void				print_map(t_arena *arena, t_win *win);
 void				get_flags(t_arena *arena, int argc, char **argv);
 
 void				create_champions(t_arena *arena, int n);
-
-// void				kill_champion(t_champ *champ);
 
 void				creat_process(t_arena *arena, int n, int fd[MAX_PLAYERS]);
 t_list				*new_process(t_arena *arena, t_process *father,

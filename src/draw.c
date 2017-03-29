@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 13:04:54 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/28 15:08:36 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/29 17:17:10 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,17 @@ void	draw_arena(t_arena *arena, t_win *win, int arena_size)
 
 	sqrt = ft_sqrt(MEM_SIZE);
 	diff = (double)arena_size / sqrt;
-	rect.w = diff;
-	rect.h = diff;
 	i = 0;
 	while (i < sqrt)
 	{
 		j = 0;
+		rect.y = i * diff + 1;
+		rect.h = (i + 1) * diff + 1 - rect.y;
 		while (j < sqrt)
 		{
-			rect.y = i * diff + 1;
-			rect.x = j++ * diff + 1;
-			define_color(arena, win, i * sqrt + j);
+			rect.x = j * diff + 1;
+			rect.w = (j + 1) * diff + 1 - rect.x;
+			define_color(arena, win, i * sqrt + j++);
 			SDL_RenderFillRect(win->render, &rect);
 		}
 		i++;

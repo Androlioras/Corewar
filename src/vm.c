@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/28 15:57:39 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/29 11:17:57 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void	virtual_machine(t_arena *arena, t_win *win)
 	t_list		*list;
 	t_process	*process;
 
-	if ((arena->flags.flags & 4) && arena->flags.dump <= arena->cycle)
-		win->stop = 1;
 	if (!arena->to_die || arena->to_die > arena->cycle_to_die)
 		verif_lives(arena, win);
 	else
@@ -96,4 +94,6 @@ void	virtual_machine(t_arena *arena, t_win *win)
 		list = list->next;
 	}
 	arena->cycle++;
+	if ((arena->flags.flags & 4) && arena->flags.dump <= arena->cycle)
+		win->stop = 1;
 }

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 16:08:49 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 16:58:30 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/29 17:10:55 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	draw_debug(t_arena *arena, t_win *win)
 	win++;
 	sqrt = ft_sqrt(MEM_SIZE);
 	i = 0;
+	ft_printf("cycle: %u\n", arena->cycle);
 	while (i < sqrt)
 	{
 		j = 0;
