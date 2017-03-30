@@ -240,50 +240,41 @@ t_env *ft_init_struct_env(void)
 	return (env);
 }
 
-short int ft_big_end(short int x)
-{
-	unsigned char i[2];
-
-	i[0] = x << 8;
-	i[1] = 8 >> x;
-	return ((short)i);
-}
-
 int	main(int argc, char **argv)
 {
-	// long int i;
-
-	// i = 9223372036854775807 1+ 9223372036854775810;
-	printf("%ld\n", 18446744073709551617);
-	// i = 2;
-	// char *str;
-	// int fd;
-	// argc = 0;
-	// t_utils *utils;
-	// t_env *env;
-	// utils = ft_init_struct_utils();
-	// env = ft_init_struct_env();
-	// str = get_all(open(argv[1], O_RDONLY));
-	// stock(ft_strsplit(str, '\n'), utils, env);
-	// fd = open("exemple.tor", O_CREAT | O_RDWR, 0777);
-	// while (utils->next)
-	// {
-	// 	if (utils->verif == 1)
-	// 		write(fd, &utils->oct, sizeof(char));
-	// 	else if (utils->verif == 2)
-	// 	{
-	// 		// utils->d_oct = ft_big_end(utils->d_oct);
-	// 		write (fd, &utils->d_oct, sizeof(short int));
-	// 	}
-	// 	else if (utils->verif == 3)
-	// 		write (fd, &utils->q_oct, sizeof(int));
-	// 	// printf("%d\n", utils->test);
-	// 	// printf("%s\n", utils->label);
-	// 	// printf("oct %hhu\n", utils->oct);
-	// 	// printf("2oct %hd\n", utils->d_oct);
-	// 	// printf("4oct %d\n", utils->q_oct);
-		// utils = utils->next;
-	// }
+	 char *str;
+	 int fd;
+	 argc = 0;
+	 t_utils *utils;
+	 t_env *env;
+	 utils = ft_init_struct_utils();
+	 env = ft_init_struct_env();
+	 str = get_all(open(argv[1], O_RDONLY));
+	 stock(ft_strsplit(str, '\n'), utils, env);
+	 fd = open("exemple.tor", O_CREAT | O_RDWR, 0777);
+	 while (utils->next)
+	 {
+	 	if (utils->verif == 1)
+	 		write(fd, &utils->oct, sizeof(char));
+	 	else if (utils->verif == 2)
+	 	{
+	 		write (fd, 1 + (&utils->d_oct), 1);
+	 		write (fd, &utils->d_oct, 1);
+	 	}
+	 	else if (utils->verif == 3)
+		{
+			write (fd, 3 + (&utils->q_oct), 1);
+			write (fd, 2 + (&utils->q_oct), 1);
+			write (fd, 1 + (&utils->q_oct), 1);
+			write (fd, (&utils->q_oct), 1);
+		}
+	 printf("%d\n", utils->test);
+	 printf("%s\n", utils->label);
+	 printf("oct %hhu\n", utils->oct);
+	 printf("2oct %hd\n", utils->d_oct);
+	 printf("4oct %d\n", utils->q_oct);
+	 utils = utils->next;
+	 }
 
 	return (0);	
 }
