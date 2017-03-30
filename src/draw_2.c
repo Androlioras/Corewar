@@ -6,11 +6,20 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 16:08:49 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/29 17:10:55 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/30 14:21:19 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+t_char	g_sh_c[MAX_PLAYERS + 1][3] =
+{
+	{242, 250, 250},
+	{88, 196, 88},
+	{19, 33, 19},
+	{28, 46, 28},
+	{214, 226, 214}
+};
 
 void	print_text(t_win *win, char *text, SDL_Rect *rect, SDL_Color *color)
 {
@@ -39,10 +48,8 @@ void	draw_debug(t_arena *arena, t_win *win)
 		j = 0;
 		while (j < sqrt)
 		{
-			if (arena->territory[i * sqrt + j] / (MAX_PLAYERS + 1))
-				ft_printf("\033[38;5;88m");
-			else if (!arena->territory[i * sqrt + j])
-				ft_printf("\033[38;5;240m");
+			ft_printf("\033[38;5;%hhum", g_sh_c[arena->territory[i * sqrt + j] %
+			(MAX_PLAYERS + 1)][arena->territory[i * sqrt + j] / (MAX_PLAYERS + 1)]);
 			ft_printf("%.2hhx\033[0m ", arena->arena[i * sqrt + j]);
 			j++;
 		}

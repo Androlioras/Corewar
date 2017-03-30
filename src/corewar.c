@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:27:45 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/28 16:31:59 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/30 16:57:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	ft_init(t_arena *arena, t_win *win)
 	arena->to_die = CYCLE_TO_DIE;
 	arena->speed = 10;
 	arena->last = MAX_PLAYERS;
+	arena->lives = 0;
+	arena->checks = 0;
 	arena->process = NULL;
 	ft_bzero(&arena->arena, MEM_SIZE);
 	ft_bzero(&arena->territory, MEM_SIZE);
@@ -111,8 +113,8 @@ int		main(int argc, char **argv)
 	if (arena.flags.flags & 4)
 		draw_debug(&arena, &win);
 	if (win.stop == 1 && arena.last < MAX_PLAYERS)
-		ft_printf("le joueur %hhu(%s) a gagne\n",
-		arena.last + 1, arena.champs[arena.last].name);
+		ft_printf("cycle %u\nle joueur %hhu(%s) a gagne\n",
+		arena.cycle, arena.last + 1, arena.champs[arena.last].name);
 	free_all_process(&arena);
 	if ((arena.flags.flags & 1) || (arena.flags.flags & 2))
 		quit_window(&win);

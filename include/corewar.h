@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 14:28:06 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/29 17:19:16 by pribault         ###   ########.fr       */
+/*   Updated: 2017/03/30 12:23:17 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void				creat_process(t_arena *arena, int n, int fd[MAX_PLAYERS]);
 t_list				*new_process(t_arena *arena, t_process *father,
 					t_char pc[4]);
 void				free_all_process(t_arena *arena);
-void				kill_process(t_list **head, t_list *process);
+void				kill_process(t_arena *arena, t_list **head, t_list *process);
 
 t_uint				get_number(t_arena *arena, t_uint pc, t_char l);
 t_uint				get_pc(t_char pc[REG_SIZE]);
