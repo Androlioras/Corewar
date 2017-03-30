@@ -14,8 +14,10 @@ typedef struct s_env
 
 typedef struct s_utils
 {
+	int test;
 	char *label;
-	unsigned char verif;
+	char *adr;
+	int verif;
 	unsigned char oct;
 	short int d_oct;
 	int 	q_oct;

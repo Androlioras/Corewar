@@ -26,14 +26,14 @@ void	remp_type(char *str, t_env *env, t_utils *utils)
 	int i;
 
 	i = 0;
-	if (str[i] == '%' && env->verif == 4)
-	{
-		utils->q_oct = 0;
-		utils->verif = 3;
-	}
-	else if (str[i] == '%' && env->verif == 2)
+	if (str[i] == '%' && env->verif == 2)
 	{
 		utils->d_oct = 0;
 		utils->verif = 2;
+	}
+	else if (str[i] == '%' && env->verif == 4)
+	{
+		utils->q_oct = 0;
+		utils->verif = 3;
 	}
 }
