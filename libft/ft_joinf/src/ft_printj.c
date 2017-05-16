@@ -1,54 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_joinf.c                                         :+:      :+:    :+:   */
+/*   ft_printj.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/15 14:06:03 by pribault          #+#    #+#             */
-/*   Updated: 2017/05/12 17:51:05 by pribault         ###   ########.fr       */
+/*   Created: 2017/05/12 17:47:40 by pribault          #+#    #+#             */
+/*   Updated: 2017/05/12 17:49:58 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_joinf.h"
 
-size_t		get_next_arg(va_list va, const char *format, size_t *i)
+static int	ft_printj_2(char *new)
 {
-	if (format[*i] == 'd')
-		return (get_number_len(va));
-	else if (format[*i] == 's')
-		return (get_string_len(va));
-	return (0);
+	size_t	len;
+
+	ft_putstr(new);
+	len = ft_strlen(new);
+	free(new);
+	return (len);
 }
 
-void		print_next_arg(va_list va, char *new, size_t *j, char c)
-{
-	if (c == 'd')
-		print_number(va, new, j);
-	else if (c == 's')
-		print_string(va, new, j);
-}
-
-void		fill_string(va_list va, const char *format, char *new)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	while (format[i])
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			print_next_arg(va, new, &j, format[i++]);
-		}
-		else
-			new[j++] = format[i++];
-	}
-}
-
-char		*ft_joinf(const char *format, ...)
+int			ft_printj(const char *format, ...)
 {
 	char	*new;
 	va_list	va;
@@ -73,5 +47,5 @@ char		*ft_joinf(const char *format, ...)
 	va_start(va, format);
 	fill_string(va, format, new);
 	va_end(va);
-	return (new);
+	return (ft_printj_2(new));
 }

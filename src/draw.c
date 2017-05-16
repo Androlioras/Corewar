@@ -6,32 +6,23 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 13:04:54 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/29 17:17:10 by pribault         ###   ########.fr       */
+/*   Updated: 2017/05/16 11:59:24 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-t_color	g_colors[MAX_PLAYERS + 1][3] =
+SDL_Texture	*define_color(t_arena *arena, t_win *win, int i)
 {
-	{{32, 32, 32, 0}, {32, 32, 32, 0}, {32, 32, 32, 0}},
-	{{128, 0, 0, 0}, {192, 0, 0, 0}, {128, 0, 0, 0}},
-	{{0, 0, 153, 0}, {0, 0, 217, 0}, {0, 0, 153, 0}},
-	{{0, 102, 0, 0}, {0, 166, 0, 0}, {0, 102, 0, 0}},
-	{{255, 204, 0, 0}, {255, 255, 0, 0}, {255, 204, 0, 0}}
-};
-
-void	define_color(t_arena *arena, t_win *win, int i)
-{
-	t_color		color;
+	t_char		player;
 	t_char		value;
 
-	value = arena->territory[i];
-	color = g_colors[value % (MAX_PLAYERS + 1)][value / (MAX_PLAYERS + 1)];
-	SDL_SetRenderDrawColor(win->render, color.r, color.g, color.b, color.a);
+	player = arena->territory[i];
+	value = arena->arena[i];
+	return (win->textures[player * 0x100 + value]);
 }
 
-void	draw_arena(t_arena *arena, t_win *win, int arena_size)
+void		draw_arena(t_arena *arena, t_win *win, int arena_size)
 {
 	SDL_Rect	rect;
 	double		diff;
@@ -41,24 +32,25 @@ void	draw_arena(t_arena *arena, t_win *win, int arena_size)
 
 	sqrt = ft_sqrt(MEM_SIZE);
 	diff = (double)arena_size / sqrt;
+	rect.w = diff - 2;
+	rect.h = diff - 2;
 	i = 0;
 	while (i < sqrt)
 	{
 		j = 0;
 		rect.y = i * diff + 1;
-		rect.h = (i + 1) * diff + 1 - rect.y;
 		while (j < sqrt)
 		{
 			rect.x = j * diff + 1;
-			rect.w = (j + 1) * diff + 1 - rect.x;
-			define_color(arena, win, i * sqrt + j++);
-			SDL_RenderFillRect(win->render, &rect);
+			SDL_RenderCopy(win->render, define_color(arena, win, i * sqrt + j),
+			NULL, &rect);
+			j++;
 		}
 		i++;
 	}
 }
 
-void	print_fps(t_win *win)
+void		print_fps(t_win *win)
 {
 	static struct timeval	prev;
 	static struct timeval	t;
@@ -82,7 +74,7 @@ void	print_fps(t_win *win)
 	prev = t;
 }
 
-void	print_panel(t_arena *arena, t_win *win, int arena_size)
+void		print_panel(t_arena *arena, t_win *win, int arena_size)
 {
 	SDL_Color	color;
 	SDL_Rect	rect;
@@ -111,7 +103,7 @@ void	print_panel(t_arena *arena, t_win *win, int arena_size)
 	free(s);
 }
 
-void	print_map(t_arena *arena, t_win *win)
+void		print_map(t_arena *arena, t_win *win)
 {
 	SDL_Rect		rect;
 	int				arena_size;

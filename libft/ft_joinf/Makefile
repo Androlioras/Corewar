@@ -5,6 +5,7 @@ SRC = src
 LIB = ..
 FLAGS = -Wall -Wextra -Werror
 SRCS = ft_joinf.c\
+	   ft_printj.c\
 	   number_join.c\
 	   string_join.c
 OBJS = $(SRCS:.c=.o)

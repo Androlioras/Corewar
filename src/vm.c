@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 10:24:13 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/30 12:29:13 by pribault         ###   ########.fr       */
+/*   Updated: 2017/05/15 16:41:25 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,34 @@
 
 void	execute(t_arena *arena, t_process *process)
 {
+	t_uint	pc;
+
+	pc = get_pc(process->pc);
 	process->waiting = 0;
-	call_function(arena, process, process->todo[0]);
+	if ((process->todo == 0 || process->todo > 16) && arena->arena[pc] > 0
+	&& arena->arena[pc] < 17)
+		read_instruction(arena, process);
+	else
+		call_function(arena, process, arena->arena[pc]);
 }
 
 void	read_instruction(t_arena *arena, t_process *process)
 {
 	t_uint	pc;
-	t_uint	i;
 
-	pc = get_pc(process->pc);
+	pc = get_pc(process->pc) % MEM_SIZE;
 	if (arena->arena[pc] < 1 || arena->arena[pc] > 16)
-		move_process(arena, process, 1);
+	{
+		process->waiting = 1;
+		process->cycles = arena->cycle + 1;
+		process->todo = arena->arena[pc];
+	}
 	else
 	{
-		i = 0;
-		while (i < ACTION_MAX_SIZE)
-		{
-			process->todo[i] = arena->arena[(pc + i) % MEM_SIZE];
-			i++;
-		}
 		process->waiting = 1;
-		process->cycles = arena->cycle + g_op[arena->arena[pc] - 1].cycles;
+		process->cycles = arena->cycle +
+		g_op[arena->arena[pc] - 1].cycles;
+		process->todo = arena->arena[pc];
 	}
 }
 
@@ -76,13 +82,17 @@ void	verif_lives(t_arena *arena, t_win *win)
 
 void	virtual_machine(t_arena *arena, t_win *win)
 {
+	static char	n;
 	t_list		*list;
 	t_process	*process;
 
-	if (!arena->to_die || arena->to_die > arena->cycle_to_die)
-		verif_lives(arena, win);
-	else
-		arena->to_die--;
+	n = (n == 10) ? 0 : n + 1;
+	if (n == 10)
+		clear_map(arena);
+	if ((arena->flags.flags & 4) && arena->flags.dump <= arena->cycle)
+		win->stop = 2;
+	if (win->stop == 1)
+		return ;
 	list = arena->process;
 	while (list)
 	{
@@ -93,7 +103,8 @@ void	virtual_machine(t_arena *arena, t_win *win)
 			read_instruction(arena, process);
 		list = list->next;
 	}
-	arena->cycle++;
-	if ((arena->flags.flags & 4) && arena->flags.dump <= arena->cycle)
-		win->stop = 2;
+	if (!arena->to_die || arena->to_die > arena->cycle_to_die)
+		verif_lives(arena, win);
+	arena->to_die -= (arena->to_die) ? 1 : 0;
+	arena->cycle += (!win->stop) ? 1 : 0;
 }

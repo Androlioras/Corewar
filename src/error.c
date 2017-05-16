@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/16 09:38:53 by pribault          #+#    #+#             */
-/*   Updated: 2017/03/27 15:44:07 by pribault         ###   ########.fr       */
+/*   Updated: 2017/05/15 16:58:11 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ static void	ft_error_3(int error, void *param)
 		ft_putendl_fd(s, 2);
 		free(s);
 	}
-	if (error == 11)
+	else if (error == 11)
 		ft_putendl_fd("-dump must be followed by an argument", 2);
+	else if (error == 12)
+		ft_putendl_fd("can't malloc textures", 2);
 }
 
 static void	ft_error_2(int error, void *param)
@@ -76,6 +78,6 @@ void		ft_error(int error, void *param)
 		ft_putendl_fd("Magiiiiiic :'(", 2);
 	else
 		ft_error_2(error, param);
-	if ((error >= 1 && error <= 11) || error == 666)
+	if ((error >= 1 && error <= 12) || error == 666)
 		exit(1);
 }

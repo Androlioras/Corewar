@@ -6,7 +6,7 @@ INCLUDE = include
 LIBFT = libft
 LIBS = lib
 FLAGS = -Wall -Wextra -Werror
-ENDFLAGS = -framework Appkit -framework OpenGL
+ENDFLAGS =
 SRCS = corewar.c\
 	   error.c\
 	   flags.c\
@@ -25,7 +25,8 @@ SRCS = corewar.c\
 	   draw_2.c\
 	   process_2.c
 SRCS2 = asm.c\
-		error.c
+		error.c\
+		op.c
 OBJS = $(SRCS:.c=.o)
 OBJS2 = $(SRCS2:.c=.o)
 

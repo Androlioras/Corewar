@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 14:47:47 by pribault          #+#    #+#             */
-/*   Updated: 2017/05/15 15:35:42 by pribault         ###   ########.fr       */
+/*   Updated: 2017/05/14 20:33:34 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	idx(t_uint *pc, t_uint n)
 		*pc = (*pc + (n % IDX_MOD)) % MEM_SIZE;
 }
 
-t_char	verif_mask(t_char mask, t_char f)
+t_char	verif_mask(t_uint mask, t_char f)
 {
 	t_char	res;
 	t_char	n;
@@ -68,9 +68,9 @@ t_char	verif_mask(t_char mask, t_char f)
 	return (res);
 }
 
-t_char	get_mask(t_arena *arena, t_process *proc, t_char f)
+t_uint	get_mask(t_arena *arena, t_process *proc, t_char f)
 {
-	t_char	mask;
+	t_uint	mask;
 	t_char	type;
 	t_char	i;
 
@@ -95,7 +95,7 @@ t_char	get_mask(t_arena *arena, t_process *proc, t_char f)
 t_uint	get_params(t_arena *ar, t_process *proc,
 		t_uint (*p)[MAX_ARGS_NUMBER], t_char f)
 {
-	t_char	mask;
+	t_uint	mask;
 	t_uint	pc;
 	t_uint	l;
 	t_char	i;
@@ -125,19 +125,16 @@ t_uint	get_params(t_arena *ar, t_process *proc,
 void	call_function(t_arena *arena, t_process *process, t_char f)
 {
 	t_uint	p[MAX_ARGS_NUMBER];
-	t_char	mask;
+	t_uint	mask;
 	t_char	verif;
 	t_uint	l;
 
-	if (f == 0 || f > 16)
-	{
+	if (f > 16)
 		move_process(arena, process, 1);
-		return ;
-	}
 	mask = get_mask(arena, process, f - 1);
 	verif = verif_mask(mask, f - 1);
 	l = get_params(arena, process, &p, f - 1);
-	if ((arena->flags.flags & 2) && verif == 1)
+	if (arena->flags.flags & 2)
 	{
 		ft_printf("cycle %-6u ", arena->cycle);
 		ft_printf("by %-4u  at %-5u %s (", process->id,
@@ -147,6 +144,8 @@ void	call_function(t_arena *arena, t_process *process, t_char f)
 	}
 	if (verif == 1)
 		g_func[f](arena, process, p);
-	if (f != 9)
+	if (f != 9 && verif)
 		move_process(arena, process, l);
+	else if (verif == 0)
+		move_process(arena, process, 1 + g_op[f - 1].mask);
 }
